@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/users/user_actions';
 import axios from 'axios';
 import { BASE_URL } from '../constants/config';
+import { toast } from 'react-toastify';
   
   export default function Signuppage() {
     const nav = useNavigate()
@@ -30,18 +31,47 @@ import { BASE_URL } from '../constants/config';
     const [showPassword, setShowPassword] = useState(false);
 
     const handleSignUp = async()=>{
-      let data = await axios.post(BASE_URL+"/user/register", {
-          name, email, password
-      })
-      let {message, status} = data.data
-      if(status == 1)
-      {
-        alert(message)
-        nav("/login")
-      }
-      else
-      {
-        alert(message)
+      try {
+        let data = await axios.post(BASE_URL+"/user/register", {
+            name, email, password
+        })
+        let {message, status} = data.data
+        if(status == 1)
+        {
+          toast.success(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          nav("/login")
+        }
+        else
+        {
+          toast.error(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        toast.error(error.response?.data?.message || "An error occurred during signup. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     }
   
@@ -95,18 +125,16 @@ import { BASE_URL } from '../constants/config';
                   size="lg"
                   bg={'blue.400'}
                   color={'white'}
-                  onClick = {handleSignUp}
                   _hover={{
                     bg: 'blue.500',
-                  }}>
+                  }}
+                  onClick={handleSignUp}>
                   Sign up
                 </Button>
               </Stack>
               <Stack pt={6}>
                 <Text align={'center'}>
-                  Already a user? <Link onClick={()=>{
-                    nav("/login")
-                  }} color={'blue.400'}>Login</Link>
+                  Already a user? <Link color={'blue.400'} onClick={()=>{nav("/login")}}>Login</Link>
                 </Text>
               </Stack>
             </Stack>

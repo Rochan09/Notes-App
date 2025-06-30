@@ -16,12 +16,28 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOGOUT } from '../../../redux/users/user_types';
+import { toast } from 'react-toastify';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const nav = useNavigate();
   const dispatch = useDispatch();
   const {auth, user, token, loading, error} = useSelector((state)=>state.userReducer)
+
+  const handleLogout = () => {
+    dispatch({type: LOGOUT});
+    toast.success("Logged out successfully", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    nav("/");
+  };
+
   return (
     <>
       <Box zIndex={"9999"} top = {0} position = {"fixed"} w = {"100%"} boxShadow = {"rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;"}
@@ -48,23 +64,21 @@ export default function Navbar() {
               <Menu>
                 <MenuButton display={auth?"block":"none"}
                   as={Button}
-                  border = "2px solid #5b9cf2"
-                  padding = {2}
                   rounded={'full'}
                   variant={'link'}
                   cursor={'pointer'}
                   minW={0}>
                   <Avatar
                     size={'sm'}
-                    src={"/user.png"}
+                    src={'https://avatars.dicebear.com/api/male/username.svg'}
                   />
                 </MenuButton>
                 <MenuList alignItems={'center'}>
                   <br />
                   <Center>
                     <Avatar
-                      size={'lg'}
-                      src={'/user.png'}
+                      size={'2xl'}
+                      src={'https://avatars.dicebear.com/api/male/username.svg'}
                     />
                   </Center>
                   <br />
@@ -73,9 +87,7 @@ export default function Navbar() {
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem onClick={()=>{
-                    dispatch({type: LOGOUT})
-                    }}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Stack>

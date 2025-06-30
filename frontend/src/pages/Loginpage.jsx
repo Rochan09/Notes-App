@@ -17,8 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/users/user_actions';
 import { useNavigate } from 'react-router-dom';
 
-  
-  export default function Loginpage() {
+export default function Loginpage() {
     const {auth, token, loading, error} = useSelector((state)=>state.userReducer)
     const nav = useNavigate()
     if(auth)
@@ -75,4 +74,4 @@ import { useNavigate } from 'react-router-dom';
         </Stack>
       </Flex>
     );
-  }
+}

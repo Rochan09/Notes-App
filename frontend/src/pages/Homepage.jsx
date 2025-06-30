@@ -1,17 +1,14 @@
 import {
     Button,
     Flex,
-    HStack,
     Heading,
     Image,
     Spacer,
     Stack,
     Text,
-    useBreakpointValue,
   } from '@chakra-ui/react';
   import { useNavigate } from 'react-router-dom';
 
-  
   export default function Homepage() {
     const nav = useNavigate();
     return (
@@ -42,15 +39,8 @@ import {
               <Button rounded={'full'} onClick={()=>{nav("/register")}}>Sign Up</Button>
             </Stack>
             <Spacer />
-            <Image src="/mern.png" />
+            <Image src="/mern.png" maxW="400px" mx="auto" />
           </Stack>
-        </Flex>
-        <Flex flex={1}>
-          <Image
-            alt={'Login Image'}
-            objectFit={'cover'}
-            src="/homebg.jpeg"
-          />
         </Flex>
       </Stack>
     );
