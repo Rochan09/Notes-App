@@ -5,11 +5,11 @@ import Loginpage from "../pages/Loginpage";
 import Notespage from "../pages/Notespage";
 import PrivateRoute from "./PrivateRoute";
 
-export default function AllRoutes(){
+export default function AllRoutes({ searchQuery }){
     return <Routes>
         <Route path="/" element={<Homepage />}></Route>
         <Route path="/register" element={<Signuppage />}></Route>
         <Route path="/login" element={<Loginpage />}></Route>
-        <Route path="/notes" element={<PrivateRoute><Notespage /></PrivateRoute>}></Route>
+        <Route path="/notes" element={<PrivateRoute><Notespage searchQuery={searchQuery} /></PrivateRoute>}></Route>
     </Routes>
 }

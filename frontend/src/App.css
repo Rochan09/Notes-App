@@ -1,3 +1,50 @@
+:root {
+  --primary: #4F8CFF;
+  --accent: #FFB347;
+  --success: #4FD18C;
+  --bg-dark: #232733;
+  --bg-light: #F4F7FA;
+  --text-dark: #F4F7FA;
+  --text-light: #232733;
+}
+
+body[data-theme='dark'] {
+  background: 
+    linear-gradient(120deg, #232733 0%, #2c3142 60%, #4F8CFF 100%);
+  color: var(--text-dark);
+}
+
+body[data-theme='light'] {
+  background: 
+    linear-gradient(120deg, #F4F7FA 0%, #e3e9f4 60%, #B6D0FF 100%);
+  color: var(--text-light);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='%234F8CFF'/%3E%3C/svg%3E");
+}
+
+.button-primary {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.7em 2em;
+  font-weight: bold;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.button-primary:hover {
+  background: var(--accent);
+  color: var(--text-light);
+}
+
 .App {
   text-align: center;
 }

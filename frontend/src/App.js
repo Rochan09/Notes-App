@@ -3,8 +3,10 @@ import { Navbar } from './components/Home/Navbar';
 import AllRoutes from './routes/AllRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
   return (
     <div className="App">
       <ToastContainer
@@ -20,8 +22,8 @@ function App() {
         theme="light"
         style={{ zIndex: 99999 }}
       />
-      <Navbar />
-      <AllRoutes />
+      <Navbar onSearch={setSearchQuery} />
+      <AllRoutes searchQuery={searchQuery} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel } from "@chakra-ui/react";
+import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel, Tooltip } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { toast } from 'react-toastify';
 
-export default function Notespage()
+export default function Notespage({ searchQuery = "" })
 {
     const dispatch = useDispatch()
     const {loading, error, data} = useSelector((state)=>state.noteReducer)
@@ -53,6 +53,11 @@ export default function Notespage()
         onClose();
     };
 
+    const filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        note.body.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return <Box mt={20} padding={8}>
         {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minH="50vh">
@@ -62,29 +67,38 @@ export default function Notespage()
             <Box display="flex" justifyContent="center" alignItems="center" minH="50vh">
                 <Text color="red.500">Error loading notes. Please try again.</Text>
             </Box>
-        ) : notes.length === 0 ? (
+        ) : filteredNotes.length === 0 ? (
             <Box display="flex" justifyContent="center" alignItems="center" minH="50vh">
                 <Text>No notes found. Create your first note!</Text>
             </Box>
         ) : (
             <Grid gap={10} w={"100%"} margin={"auto"} gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))">
-                {notes.map((el)=><NoteCard key={el._id} {...el}/>)}
+                {filteredNotes.map((el)=><NoteCard key={el._id} {...el}/>)}
             </Grid>
         )}
-        <IconButton 
-            boxShadow={"rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;"} 
-            position={"fixed"} 
-            w={"100px"} 
-            h={"100px"} 
-            bg={"#5b9cf2"} 
+        <Tooltip label="Add New Note" hasArrow placement="left">
+          <IconButton 
+            boxShadow="0 8px 24px rgba(80, 112, 255, 0.2)" 
+            position="fixed" 
+            w="80px" 
+            h="80px" 
+            bg="#4F8CFF" 
+            color="white"
             bottom={0} 
             right={0} 
             margin={16} 
-            icon={<AddIcon fontSize={30} />} 
+            icon={<AddIcon fontSize={36} />} 
             onClick={onOpen}
             isLoading={loading}
             aria-label="Add note"
-        />
+            _hover={{
+              transform: "scale(1.08)",
+              bg: "#6fa8ff",
+              boxShadow: "0 12px 32px rgba(80, 112, 255, 0.3)"
+            }}
+            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+          />
+        </Tooltip>
         <Modal
           initialFocusRef={initialRef}
           finalFocusRef={finalRef}
