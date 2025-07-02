@@ -105,6 +105,13 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 - **Backend API**: Deployed on [Cyclic](https://www.cyclic.sh/)
 
 ---
+## 📌 Acknowledgements
+
+This project is adapted from [Arun Opal’s React Notes App](https://github.com/arunopal/react-notes-app), originally developed as an open-source notes application using React.
+Significant modifications and enhancements have been made to suit personalized requirements, including structural changes, UI improvements, and added features.
+Credit goes to the original author for the foundational work and architecture.
+
+---
 
 ## 📸 Screenshots
 
