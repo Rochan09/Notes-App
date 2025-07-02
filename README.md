@@ -108,7 +108,7 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 
 ## 📸 Screenshots
 
-_Add UI screenshots or a demo GIF here (optional)._
+Loading...
 
 ---
 
