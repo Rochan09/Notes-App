@@ -1,6 +1,6 @@
 # React Notes App
 # Introduction
-A web application with **CRUD** (Create, Retrieve, Update, Delete) functionality built using **MERN** stack (MongoDB, Express, React, Node.js) that allows the user to view, create, update and delete notes in the form of visual cards.
+A full-stack Notes Application built using the MERN stack (MongoDB, Express, React, Node.js) with complete CRUD operations, user authentication, and JWT-based authorization. Users can securely create, view, update, and delete notes displayed as interactive cards.
 # Tech stacks used
  - **[MongoDB](https://www.mongodb.com/)** - For database functionality
  - **[Express](https://expressjs.com/)** - For handling server side (backend) functions
