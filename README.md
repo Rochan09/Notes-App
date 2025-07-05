@@ -102,7 +102,7 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 ## 🌐 Deployment
 
 - **Frontend**: Deployed on [Vercel](https://vercel.com/)
-- **Backend API**: Deployed on [Cyclic](https://www.cyclic.sh/)
+- **Backend API**: Deployed on [Render](https://render.com/)
 
 ---
 ## 📌 Acknowledgements
