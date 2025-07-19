@@ -1,6 +1,6 @@
 import axios from "axios"
 import { LOGIN_USER_ERROR, LOGIN_USER_LOADING, LOGIN_USER_SUCCESS } from "./user_types"
-import { BASE_URL } from "../../constants/config"
+import { API_BASE_URL } from "../../constants/config"
 import { toast } from 'react-toastify';
 
 const showToast = (message, type = 'success') => {
@@ -18,7 +18,7 @@ const showToast = (message, type = 'success') => {
 export const getUser = (obj) => async(dispatch) => {
     dispatch({type: LOGIN_USER_LOADING})
     try {
-        let data = await axios(BASE_URL+"/user/login", {
+        let data = await axios(API_BASE_URL+"/user/login", {
             method: "post",
             data: obj
         })

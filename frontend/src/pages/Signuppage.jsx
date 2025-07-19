@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/users/user_actions';
 import axios from 'axios';
-import { BASE_URL } from '../constants/config';
+import { API_BASE_URL } from '../constants/config';
 import { toast } from 'react-toastify';
   
   export default function Signuppage() {
@@ -32,7 +32,7 @@ import { toast } from 'react-toastify';
 
     const handleSignUp = async()=>{
       try {
-        let data = await axios.post(BASE_URL+"/user/register", {
+        let data = await axios.post(API_BASE_URL+"/user/register", {
             name, email, password
         })
         let {message, status} = data.data
