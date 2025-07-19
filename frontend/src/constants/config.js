@@ -1,1 +1,1 @@
-export const BASE_URL = "https://notes-app-ipi5.onrender.com"
+export const API_BASE_URL = process.env.REACT_APP_API_URL;
