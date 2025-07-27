@@ -11,8 +11,9 @@ import {
     Heading,
     Text,
     useColorModeValue,
+    Spinner,
   } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/users/user_actions';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +31,27 @@ export default function Loginpage() {
     const handleLogin = ()=>{
         dispatch(getUser({email, password}))
     }
+    const [statusIndex, setStatusIndex] = useState(0);
+    const statusMessages = [
+      '🔐 Logging you in...',
+      '📡 Connecting to secure servers...',
+      '⚙️ Authenticating your credentials...',
+      '📄 Fetching your notes...'
+    ];
+    useEffect(() => {
+      let interval;
+      if (loading) {
+        setStatusIndex(0);
+        interval = setInterval(() => {
+          setStatusIndex((prev) => (prev + 1) % statusMessages.length);
+        }, 2000);
+      } else if (auth) {
+        setStatusIndex(-1); // Show success message
+      } else {
+        setStatusIndex(0);
+      }
+      return () => clearInterval(interval);
+    }, [loading, auth]);
     return (
       <Flex
         minH={'100vh'}
@@ -65,9 +87,23 @@ export default function Loginpage() {
                   color={'white'}
                   _hover={{
                     bg: 'blue.500',
-                  }}>
+                  }}
+                  isLoading={loading}
+                  loadingText="Signing in..."
+                  disabled={loading}
+                >
                   Sign in
                 </Button>
+                {loading && (
+                  <Stack align="center" mt={4}>
+                    <Spinner size="lg" color="blue.400" />
+                    <Text color="blue.400" fontWeight="bold">
+                      {statusIndex === -1
+                        ? '✅ Logged in!'
+                        : statusMessages[statusIndex]}
+                    </Text>
+                  </Stack>
+                )}
               </Stack>
             </Stack>
           </Box>

@@ -72,7 +72,7 @@ export default function Notespage({ searchQuery = "" })
                 <Text>No notes found. Create your first note!</Text>
             </Box>
         ) : (
-            <Grid gap={10} w={"100%"} margin={"auto"} gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))">
+            <Grid gap={10} w={"100%"} margin={"auto"} gridTemplateColumns="repeat(auto-fill, minmax(240px, 1fr))">
                 {filteredNotes.map((el)=><NoteCard key={el._id} {...el}/>)}
             </Grid>
         )}
