@@ -10,7 +10,7 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 - **Backend**: [Node.js](https://nodejs.org/), [Express](https://expressjs.com/)
 - **Database**: [MongoDB](https://www.mongodb.com/), [Mongoose](https://mongoosejs.com/)
 - **Authentication**: [bcrypt](https://www.npmjs.com/package/bcrypt), [JWT](https://jwt.io/)
-- **Deployment**: Backend on [Cyclic](https://www.cyclic.sh/), Frontend on [Vercel](https://vercel.com/)
+- **Deployment**: Backend on [render](https://render.com/), Frontend on [Vercel](https://vercel.com/)
 
 ---
 
@@ -25,79 +25,6 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 
 ---
 
-## 🧠 Backend Overview
-
-### 🔧 General
-- Built with Express and Mongoose
-- Express routers handle user and note operations
-- MongoDB connection managed via Mongoose
-
-### 🔐 Authentication
-- HTTP `POST` used for sign-up and login
-- Passwords are hashed using bcrypt before storing
-- Email uniqueness check on registration
-- JWT tokens issued on login with 1-day expiration
-- Token required in headers for all note operations
-
-### 📄 Database Models
-
-- **User Model**
-  - `username`, `email`, `password` (hashed)
-- **Note Model**
-  - `title`, `body`, `userId`
-
-### 📝 API Endpoints
-
-| Operation       | Method | Endpoint           | Auth | Description                        |
-|----------------|--------|--------------------|------|------------------------------------|
-| Create Note     | POST   | `/api/notes`       | ✅   | Creates a new note                 |
-| Get Notes       | GET    | `/api/notes`       | ✅   | Retrieves all notes for a user     |
-| Update Note     | PATCH  | `/api/notes/:id`   | ✅   | Updates a note by ID               |
-| Delete Note     | DELETE | `/api/notes/:id`   | ✅   | Deletes a note by ID               |
-
----
-
-## 💻 Frontend Overview
-
-### 📄 Pages
-
-- **Home**: Links to Log In and Sign Up
-- **Sign Up**: User registration form
-- **Login**: User login form
-- **Notes**: Private page to create/manage notes
-
-### 🧩 Components
-
-- Navigation Bar
-- Note Cards (with Update/Delete)
-- Modal Dialogs for Create/Update
-- Buttons, Menus, Avatars
-
-### 🔁 State Management
-
-- **Redux** with `redux-thunk` for async actions
-- `User Redux`:
-  - States: Initial, Loading, Success, Error, Logout
-- `Note Redux`:
-  - States: Get, Create, Update, Delete (each with loading/success/error)
-- `useSelector()` and `useDispatch()` used for accessing and updating state
-
-### 🛡️ Private Routing
-
-- Notes page is protected using private routes
-- Access granted only if user is authenticated (checked via Redux state)
-
----
-
-## 🧪 Functional Highlights
-
-- **useState()** to manage form inputs
-- **useEffect()** to fetch notes on mount
-- **useDisclosure()** to manage modals
-- **Axios** for HTTP requests to backend
-- All user actions update Redux state and UI accordingly
-
----
 
 ## 🌐 Deployment
 
@@ -110,7 +37,7 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 
 ## 📸 Screenshots
 
-![App Thumbnail](.Thumbnail.png) 
+![App Thumbnail](./frontend/public/Thumbnail.png) 
 
 ---
 
