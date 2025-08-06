@@ -1,5 +1,5 @@
 import axios from "axios"
-import { LOGIN_USER_ERROR, LOGIN_USER_LOADING, LOGIN_USER_SUCCESS } from "./user_types"
+import { LOGIN_USER_ERROR, LOGIN_USER_LOADING, LOGIN_USER_SUCCESS, LOGOUT, REGISTER_USER_ERROR, REGISTER_USER_LOADING, REGISTER_USER_SUCCESS } from "./user_types"
 import { API_BASE_URL } from "../../constants/config"
 import { toast } from 'react-toastify';
 
@@ -36,5 +36,32 @@ export const getUser = (obj) => async(dispatch) => {
         const errorMessage = error.response?.data?.message || "An error occurred during login. Please try again.";
         showToast(errorMessage, 'error');
         dispatch({type: LOGIN_USER_ERROR})
+    }
+}
+
+export const logoutUser = () => (dispatch) => {
+    showToast("Successfully logged out!", 'info');
+    dispatch({type: LOGOUT});
+}
+
+export const registerUser = (obj) => async(dispatch) => {
+    dispatch({type: REGISTER_USER_LOADING})
+    try {
+        let data = await axios.post(API_BASE_URL+"/user/register", obj)
+        let {message, status} = data.data
+        if(status === 1)
+        {
+            showToast(message, 'success');
+            dispatch({type: REGISTER_USER_SUCCESS})
+        }
+        else
+        {
+            showToast(message, 'error');
+            dispatch({type: REGISTER_USER_ERROR})
+        }
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || "An error occurred during signup. Please try again.";
+        showToast(errorMessage, 'error');
+        dispatch({type: REGISTER_USER_ERROR})
     }
 }

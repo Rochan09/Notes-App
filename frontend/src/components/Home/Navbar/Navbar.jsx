@@ -95,7 +95,7 @@ export default function Navbar({ onSearch }) {
                   minW={0}>
                   <Avatar
                     size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
+                    src={'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'}
                   />
                 </MenuButton>
                 <MenuList alignItems={'center'}>
@@ -103,7 +103,7 @@ export default function Navbar({ onSearch }) {
                   <Center>
                     <Avatar
                       size={'2xl'}
-                      src={'https://avatars.dicebear.com/api/male/username.svg'}
+                      src={'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'}
                     />
                   </Center>
                   <br />

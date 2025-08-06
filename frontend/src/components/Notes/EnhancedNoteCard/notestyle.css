@@ -1,0 +1,83 @@
+/* Enhanced Note Card Styles */
+.enhanced-note-card {
+  transition: all 0.3s ease;
+}
+
+.enhanced-note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.search-highlight {
+  background-color: #ffd700;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.relevance-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 0 8px 8px 0;
+}
+
+.relevance-high {
+  background: linear-gradient(to bottom, #48bb78, #38a169);
+}
+
+.relevance-medium {
+  background: linear-gradient(to bottom, #ed8936, #dd6b20);
+}
+
+.relevance-low {
+  background: linear-gradient(to bottom, #e53e3e, #c53030);
+}
+
+.note-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 8px;
+}
+
+.attachment-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-button {
+  transition: all 0.2s ease;
+}
+
+.star-button:hover {
+  transform: scale(1.1);
+}
+
+.starred {
+  color: #ffd700 !important;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .search-highlight {
+    background-color: #b7791f;
+    color: #1a202c;
+  }
+  
+  .note-stats {
+    color: #a0aec0;
+  }
+}

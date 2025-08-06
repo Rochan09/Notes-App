@@ -24,25 +24,42 @@ import {
               A note taking app built using MongoDB, Express, React and Node.JS
             </Text>
             <Stack direction={'row'} spacing={4} justify="center" align="center">
-              <button
-                className="button-primary"
-                onClick={() => {
-                  nav("/login");
+              <Button
+                bgGradient="linear(to-r, purple.400, teal.400)"
+                color={'white'}
+                _hover={{
+                  bgGradient: 'linear(to-r, purple.500, teal.500)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: 'lg',
                 }}
-              >
+                _active={{
+                  transform: 'translateY(0px)',
+                }}
+                transition="all 0.2s"
+                onClick={() => {
+                  nav('/login');
+                }}>
                 Log In
-              </button>
-              <button
-                className="button-primary"
-                onClick={() => {
-                  nav("/register");
+              </Button>
+              <Button
+                bgGradient="linear(to-r, purple.400, teal.400)"
+                color={'white'}
+                _hover={{
+                  bgGradient: 'linear(to-r, purple.500, teal.500)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: 'lg',
                 }}
-              >
+                _active={{
+                  transform: 'translateY(0px)',
+                }}
+                transition="all 0.2s"
+                onClick={() => {
+                  nav('/register');
+                }}>
                 Sign Up
-              </button>
+              </Button>
             </Stack>
             <Spacer />
-            <Image src="/mern.png" maxW="400px" mx="auto" />
           </Stack>
         </Flex>
       </Stack>
