@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
     Box, 
     Input, 
-    Textarea, 
     Button, 
     VStack, 
     Heading, 
@@ -10,19 +9,42 @@ import {
     useColorModeValue,
     Container,
     Spinner,
-    Text
+    Text,
+    IconButton,
+    Divider,
+    Checkbox,
+    FormControl,
+    FormLabel,
+    Flex,
+    Textarea,
+    Stack,
+    Badge
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateNotes } from '../redux/notes/note_actions';
 import { toast } from 'react-toastify';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { 
+    FaBold, 
+    FaItalic, 
+    FaUnderline, 
+    FaStrikethrough,
+    FaListUl,
+    FaListOl,
+    FaLink,
+    FaCode,
+    FaQuoteLeft,
+    FaSave
+} from 'react-icons/fa';
 
 export default function EditNotePage() {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
+    const [isImportant, setIsImportant] = useState(false);
     const [noteFound, setNoteFound] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const textareaRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
@@ -30,7 +52,8 @@ export default function EditNotePage() {
 
     // All useColorModeValue hooks must be called at the top level
     const bgColor = useColorModeValue('gray.50', 'gray.900');
-    const cardBg = useColorModeValue('white', 'rgba(40,54,85,0.85)');
+    const cardBg = useColorModeValue('white', 'rgba(30, 41, 59, 0.95)');
+    const textColor = useColorModeValue('gray.800', 'gray.100');
     const textColor600 = useColorModeValue('gray.600', 'gray.400');
     const textColor700 = useColorModeValue('gray.700', 'white');
     const textColor300 = useColorModeValue('gray.600', 'gray.300');
@@ -41,6 +64,9 @@ export default function EditNotePage() {
     const placeholderColor = useColorModeValue('#7b8db0', '#a0aec0');
     const outlineBorderColor = useColorModeValue('#e2e8f0', '#4a5568');
     const outlineHoverBg = useColorModeValue('gray.50', 'gray.700');
+    const buttonBg = useColorModeValue('gray.100', 'gray.700');
+    const buttonHover = useColorModeValue('gray.200', 'gray.600');
+    const toolbarBg = useColorModeValue('gray.50', 'gray.800');
 
     useEffect(() => {
         if (notes && notes.length > 0) {
@@ -48,6 +74,7 @@ export default function EditNotePage() {
             if (noteToEdit) {
                 setTitle(noteToEdit.title);
                 setBody(noteToEdit.body);
+                setIsImportant(noteToEdit.important || false);
                 setNoteFound(true);
             } else {
                 setNoteFound(false);
@@ -56,13 +83,39 @@ export default function EditNotePage() {
         }
     }, [id, notes]);
 
+    // Formatting functions for rich text
+    const formatText = (command, value = null) => {
+        document.execCommand(command, false, value);
+        textareaRef.current?.focus();
+    };
+
+    const insertAtCursor = (text) => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newBody = body.substring(0, start) + text + body.substring(end);
+            setBody(newBody);
+            
+            // Reset cursor position
+            setTimeout(() => {
+                textarea.focus();
+                textarea.setSelectionRange(start + text.length, start + text.length);
+            }, 0);
+        }
+    };
+
     const handleSubmit = () => {
         if (!title.trim() || !body.trim()) {
             toast.error("Please fill in both title and body fields");
             return;
         }
         
-        dispatch(updateNotes(id, { title: title.trim(), body: body.trim() }));
+        dispatch(updateNotes(id, { 
+            title: title.trim(), 
+            body: body.trim(),
+            important: isImportant
+        }));
         navigate('/notes');
     };
 
@@ -88,23 +141,24 @@ export default function EditNotePage() {
             <Box bg={bgColor} minH="100vh" py={8}>
                 <Container maxW="4xl">
                     <VStack spacing={6}>
-                        <Button
-                            leftIcon={<ArrowBackIcon />}
-                            variant="ghost"
-                            onClick={handleCancel}
-                            size="lg"
-                            alignSelf="flex-start"
-                            color={textColor300}
-                            _hover={{ 
-                                bg: bgHover,
-                                transform: 'translateX(-2px)'
-                            }}
-                        >
-                            Back to Notes
-                        </Button>
-                        <Text fontSize="xl" color={textColor600}>
-                            Note not found
-                        </Text>
+                        <HStack w="100%" justify="space-between" align="center">
+                            <Text fontSize="xl" color={textColor600}>
+                                Note not found
+                            </Text>
+                            <Button
+                                leftIcon={<ArrowBackIcon />}
+                                variant="ghost"
+                                onClick={handleCancel}
+                                size="lg"
+                                color={textColor300}
+                                _hover={{ 
+                                    bg: bgHover,
+                                    transform: 'translateX(2px)'
+                                }}
+                            >
+                                Back to Notes
+                            </Button>
+                        </HStack>
                     </VStack>
                 </Container>
             </Box>
@@ -112,97 +166,216 @@ export default function EditNotePage() {
     }
 
     return (
-        <Box bg={bgColor} minH="100vh" py={8}>
-            <Container maxW="4xl">
-                <VStack spacing={6} align="stretch">
-                    {/* Header */}
-                    <HStack spacing={4}>
+        <Box bg={bgColor} minH="100vh" py={4}>
+            <Container maxW="6xl">
+                {/* Header */}
+                <HStack spacing={4} mb={6} justify="space-between">
+                    <Heading size="lg" color={textColor700}>
+                        Edit Note
+                    </Heading>
+                    <HStack spacing={3}>
+                        <Button
+                            leftIcon={<FaSave />}
+                            colorScheme="blue"
+                            onClick={handleSubmit}
+                            isLoading={loading}
+                            loadingText="Updating..."
+                            size="md"
+                        >
+                            Update Note
+                        </Button>
                         <Button
                             leftIcon={<ArrowBackIcon />}
                             variant="ghost"
                             onClick={handleCancel}
-                            size="lg"
+                            size="md"
                             color={textColor300}
                             _hover={{ 
                                 bg: bgHover,
-                                transform: 'translateX(-2px)'
+                                transform: 'translateX(2px)'
                             }}
                         >
                             Back to Notes
                         </Button>
-                        <Heading size="xl" color={textColor700}>
-                            Edit Note
-                        </Heading>
                     </HStack>
+                </HStack>
 
-                    {/* Note Editor */}
-                    <Box
-                        bg={cardBg}
-                        borderRadius="xl"
-                        p={8}
-                        boxShadow={boxShadow}
-                        border={borderColor}
-                        style={{backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)'}}
-                    >
-                        <VStack spacing={6} align="stretch">
+                {/* Main Editor */}
+                <Box
+                    bg={cardBg}
+                    borderRadius="xl"
+                    p={6}
+                    boxShadow={boxShadow}
+                    border={borderColor}
+                    style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                >
+                    <VStack spacing={6} align="stretch">
+                        {/* Title Input */}
+                        <FormControl>
+                            <FormLabel fontSize="sm" color={textColor600} fontWeight="600">
+                                Enter A Note Title
+                            </FormLabel>
                             <Input
-                                placeholder="Enter note title..."
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Note Title"
                                 size="lg"
-                                fontSize="xl"
-                                fontWeight="bold"
+                                fontSize="lg"
+                                fontWeight="500"
                                 borderRadius="lg"
                                 borderColor={inputBorderColor}
-                                _focus={{ borderColor: '#4F8CFF', boxShadow: '0 0 0 2px #4F8CFF' }}
+                                bg="transparent"
+                                color={textColor700}
                                 _placeholder={{ color: placeholderColor }}
+                                _focus={{
+                                    borderColor: '#4F8CFF',
+                                    boxShadow: '0 0 0 2px #4F8CFF'
+                                }}
                             />
-                            
+                        </FormControl>
+
+                        {/* Important Checkbox */}
+                        <Checkbox
+                            isChecked={isImportant}
+                            onChange={(e) => setIsImportant(e.target.checked)}
+                            colorScheme="green"
+                            size="lg"
+                            fontWeight="500"
+                            color={textColor700}
+                        >
+                            Is Important
+                        </Checkbox>
+
+                        {/* Content Editor Section */}
+                        <FormControl>
+                            <FormLabel fontSize="sm" color={textColor600} fontWeight="600">
+                                Enter A Note Description
+                            </FormLabel>
+
+                            {/* Formatting Toolbar */}
+                            <Box
+                                bg={toolbarBg}
+                                p={3}
+                                borderRadius="lg"
+                                border="1px solid"
+                                borderColor={inputBorderColor}
+                                mb={2}
+                            >
+                                <HStack spacing={1} wrap="wrap">
+                                    {/* Text Formatting */}
+                                    <IconButton
+                                        icon={<FaBold />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('**Bold Text**')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Bold"
+                                    />
+                                    <IconButton
+                                        icon={<FaItalic />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('_Italic Text_')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Italic"
+                                    />
+                                    <IconButton
+                                        icon={<FaUnderline />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('<u>Underlined Text</u>')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Underline"
+                                    />
+                                    <IconButton
+                                        icon={<FaStrikethrough />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('~~Strikethrough Text~~')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Strikethrough"
+                                    />
+                                    
+                                    <Divider orientation="vertical" height="24px" mx={2} />
+
+                                    {/* Lists */}
+                                    <IconButton
+                                        icon={<FaListUl />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('\n• List item\n• List item\n')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Bullet List"
+                                    />
+                                    <IconButton
+                                        icon={<FaListOl />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('\n1. List item\n2. List item\n')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Numbered List"
+                                    />
+
+                                    <Divider orientation="vertical" height="24px" mx={2} />
+
+                                    {/* Special Elements */}
+                                    <IconButton
+                                        icon={<FaQuoteLeft />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('\n> Quote text here\n')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Quote"
+                                    />
+                                    <IconButton
+                                        icon={<FaCode />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('`code snippet`')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Code"
+                                    />
+                                    <IconButton
+                                        icon={<FaLink />}
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => insertAtCursor('[Link Text](https://example.com)')}
+                                        _hover={{ bg: buttonHover }}
+                                        title="Link"
+                                    />
+                                </HStack>
+                            </Box>
+
+                            {/* Text Area */}
                             <Textarea
-                                placeholder="Write your note here..."
+                                ref={textareaRef}
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
+                                placeholder="Start writing..."
                                 minH="400px"
                                 fontSize="md"
                                 borderRadius="lg"
                                 resize="vertical"
                                 borderColor={inputBorderColor}
-                                _focus={{ borderColor: '#4F8CFF', boxShadow: '0 0 0 2px #4F8CFF' }}
+                                bg="transparent"
+                                color={textColor700}
+                                lineHeight="1.6"
                                 _placeholder={{ color: placeholderColor }}
+                                _focus={{
+                                    borderColor: '#4F8CFF',
+                                    boxShadow: '0 0 0 2px #4F8CFF'
+                                }}
                             />
+                        </FormControl>
 
-                            {/* Action Buttons */}
-                            <HStack spacing={4} justify="flex-end" pt={4}>
-                                <Button
-                                    onClick={handleCancel}
-                                    size="lg"
-                                    variant="outline"
-                                    px={8}
-                                    borderColor={outlineBorderColor}
-                                    _hover={{ bg: outlineHoverBg }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    onClick={handleSubmit}
-                                    size="lg"
-                                    bgGradient="linear(to-r, #4F8CFF, #01d8fb)"
-                                    color="white"
-                                    px={8}
-                                    isLoading={loading}
-                                    _hover={{ 
-                                        bgGradient: 'linear(to-r, #6fa8ff, #4F8CFF)',
-                                        transform: 'translateY(-2px)',
-                                        boxShadow: 'lg'
-                                    }}
-                                    transition="all 0.2s"
-                                >
-                                    Update Note
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </Box>
-                </VStack>
+                        {/* Footer Info */}
+                        <Box textAlign="right">
+                            <Text fontSize="sm" color={textColor600}>
+                                {body.length} characters • {body.split(/\s+/).filter(word => word.length > 0).length} words
+                            </Text>
+                        </Box>
+                    </VStack>
+                </Box>
             </Container>
         </Box>
     );

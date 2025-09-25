@@ -76,7 +76,7 @@ export default function Homepage() {
 
       {/* Features Grid */}
       <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
-        <Box maxW="6xl" mx="auto" py={8}>
+        <Box maxW="6xl" mx="auto" py={8} px={{ base: 4, md: 8 }}>
           <Heading as="h2" size="lg" textAlign="center" mb={2} color={textColor}>
             Why Choose NotesApp?
           </Heading>
@@ -101,11 +101,11 @@ export default function Homepage() {
 
       {/* Tech Stack */}
       <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}>
-        <Box maxW="4xl" mx="auto" py={8}>
+        <Box maxW="4xl" mx="auto" py={8} px={{ base: 4, md: 8 }}>
           <Heading as="h3" size="md" textAlign="center" mb={4} color={textColor}>
             Tech Stack
           </Heading>
-          <Flex justify="center" gap={8}>
+          <Flex justify="center" gap={8} flexWrap="wrap">
             {techStack.map((t) => (
               <Flex key={t.name} direction="column" align="center" bg={bgSection} borderRadius="lg" p={4} boxShadow="sm" minW="120px" borderWidth={colorMode === 'dark' ? '1px' : '0'} borderColor={highlightColor}>
                 {t.icon}
@@ -117,7 +117,7 @@ export default function Homepage() {
       </motion.div>
 
     {/* Footer */}
-    <Box as="footer" w="full" py={6} mt="auto" textAlign="center" color={textColor} fontSize="sm" opacity={0.7}>
+    <Box as="footer" w="full" py={6} px={{ base: 4, md: 8 }} mt="auto" textAlign="center" color={textColor} fontSize="sm" opacity={0.7}>
       © 2024-2025 Rochan Vardhan Boddepalli. All rights reserved.
     </Box>
   </Box>

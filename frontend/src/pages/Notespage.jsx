@@ -1,33 +1,28 @@
-import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel, Tooltip, InputGroup, InputLeftElement, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "@chakra-ui/react";
-import { AddIcon, SearchIcon } from "@chakra-ui/icons";
+import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel, Tooltip, InputGroup, InputLeftElement, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useColorModeValue, SimpleGrid } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NoteCard from "../components/Notes/NoteCard/NoteCard";
 import { getNotes, updateNotes, deleteNotes, createNotes } from "../redux/notes/note_actions";
 
-function Notespage() {
+function Notespage({ searchQuery }) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
-  const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Select notes from Redux store
   const notes = useSelector((state) => state.noteReducer.data || []);
 
-  // Search/filter logic
-  const searchPlaceholder = colorMode === "dark" ? "#b3d1ff" : "#7b8db0";
-  const searchBg = colorMode === "dark" ? "#181f34" : "#f4f7fe";
-  const searchColor = colorMode === "dark" ? "#e0e7ff" : "#181f34";
-  const searchBorder = colorMode === "dark" ? "1px solid #2a3656" : "1px solid #c3dafe";
-
+  // Filter notes based on search query from navbar
   const filteredNotes = notes.filter(
     (note) =>
-      note.title.toLowerCase().includes(search.toLowerCase()) ||
-      note.body.toLowerCase().includes(search.toLowerCase())
+      !searchQuery ||
+      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.body.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -43,50 +38,30 @@ function Notespage() {
 
   return (
     <Box mt={8} padding={8}>
-      {/* Modern Search Bar */}
-      <Box mb={12} display="flex" justifyContent="center" alignItems="center" gap={6}>
-        <InputGroup maxW="3xl" w="100%">
-          <InputLeftElement pointerEvents="none" height="100%" pl={4}>
-            <SearchIcon color={colorMode === 'dark' ? '#b3d1ff' : searchPlaceholder} boxSize={9} style={{ marginTop: 2 }} />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder="Search your thoughts..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            fontSize="1.5rem"
-            pl={16}
-            py={8}
-            borderRadius="2xl"
-            bg={searchBg}
-            color={searchColor}
-            _placeholder={{ color: searchPlaceholder, fontSize: '1.3rem' }}
-            boxShadow={colorMode === 'dark' ? '0 2px 24px #181f34' : '0 2px 24px #e0e7ff'}
-            border={searchBorder}
-            outline="none"
-            transition="all 0.2s"
-          />
-        </InputGroup>
-  {/* Removed ViewToggle, always grid view */}
-        <Tooltip label="Add New Note" hasArrow placement="top">
-          <IconButton
-            boxShadow="0 8px 24px rgba(80, 112, 255, 0.2)"
-            w="56px"
-            h="56px"
-            bg="#4F8CFF"
-            color="white"
-            icon={<AddIcon fontSize={28} />}
-            onClick={handleCreateNote}
-            isLoading={loading}
-            aria-label="Add note"
-            _hover={{
-              transform: "scale(1.08)",
-              bg: "#6fa8ff",
-              boxShadow: "0 12px 32px rgba(80, 112, 255, 0.3)"
-            }}
-            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-          />
-        </Tooltip>
+      {/* Create Button - Left positioned */}
+      <Box mb={6} display="flex" justifyContent="flex-start" alignItems="center">
+        <Button
+          leftIcon={<AddIcon />}
+          bg="#4F8CFF"
+          color="white"
+          size="lg"
+          onClick={handleCreateNote}
+          isLoading={loading}
+          borderRadius="xl"
+          px={8}
+          py={4}
+          fontSize="md"
+          fontWeight="semibold"
+          _hover={{
+            transform: "scale(1.05)",
+            bg: "#6fa8ff",
+            boxShadow: "0 8px 24px rgba(80, 112, 255, 0.3)"
+          }}
+          transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+          boxShadow="0 4px 16px rgba(80, 112, 255, 0.2)"
+        >
+          Create
+        </Button>
       </Box>
 
       {loading && (
@@ -141,7 +116,7 @@ function Notespage() {
             <ellipse cx="60" cy="100" rx="28" ry="6" fill="#e0e7ff" />
           </svg>
           <Text fontSize="xl" color="gray.500" fontWeight="semibold" textAlign="center">
-            No notes yet, add your first!
+            {searchQuery ? `No notes found matching "${searchQuery}"` : "No notes yet, add your first!"}
           </Text>
         </Box>
       )}

@@ -45,7 +45,10 @@ export default function CreateNotePage() {
             <Container maxW="4xl">
                 <VStack spacing={6} align="stretch">
                     {/* Header */}
-                    <HStack spacing={4}>
+                    <HStack spacing={4} justify="space-between" align="center">
+                        <Heading size="xl" color={useColorModeValue('gray.700', 'white')}>
+                            Create New Note
+                        </Heading>
                         <Button
                             leftIcon={<ArrowBackIcon />}
                             variant="ghost"
@@ -54,14 +57,11 @@ export default function CreateNotePage() {
                             color={useColorModeValue('gray.600', 'gray.300')}
                             _hover={{ 
                                 bg: useColorModeValue('gray.100', 'gray.700'),
-                                transform: 'translateX(-2px)'
+                                transform: 'translateX(2px)'
                             }}
                         >
                             Back to Notes
                         </Button>
-                        <Heading size="xl" color={useColorModeValue('gray.700', 'white')}>
-                            Create New Note
-                        </Heading>
                     </HStack>
 
                     {/* Note Editor */}
