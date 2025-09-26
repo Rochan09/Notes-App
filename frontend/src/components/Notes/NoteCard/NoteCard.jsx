@@ -1,5 +1,5 @@
 
-import { Button, Box, Text, Badge, HStack, IconButton, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, useDisclosure, useColorModeValue } from "@chakra-ui/react";
+import { Button, Box, Text, Badge, HStack, VStack, IconButton, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, useDisclosure, useColorModeValue } from "@chakra-ui/react";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { deleteNotes } from "../../../redux/notes/note_actions";
 import { useNavigate } from 'react-router-dom';
 
 
-export default function NoteCard({title, body, user, _id, createdAt, important, noteNumber}) {
+export default function NoteCard({title, body, user, _id, createdAt, updatedAt, important, noteNumber}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state.noteReducer);
@@ -22,6 +22,62 @@ export default function NoteCard({title, body, user, _id, createdAt, important, 
         dispatch(deleteNotes(_id));
         onDeleteClose();
     };
+
+    // Format timestamp function
+    const formatTimestamp = (timestamp) => {
+        if (!timestamp) return '';
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffInMs = now - date;
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+        // Get formatted date and time
+        const timeString = date.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+        
+        const dateString = date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric',
+            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+        });
+
+        if (diffInMinutes < 1) return `Just now (${timeString})`;
+        if (diffInMinutes < 60) return `${diffInMinutes}m ago (${timeString})`;
+        if (diffInHours < 24) return `${diffInHours}h ago (${timeString})`;
+        if (diffInDays < 7) return `${diffInDays}d ago (${dateString} ${timeString})`;
+        
+        // For older notes, show full date and time
+        return `${dateString} at ${timeString}`;
+    };
+
+    // Determine which timestamp to show and what label to use
+    const getDisplayTimestamp = () => {
+        const createdTime = createdAt ? new Date(createdAt) : null;
+        const updatedTime = updatedAt ? new Date(updatedAt) : null;
+        
+        // If both timestamps exist and updatedAt is significantly later than createdAt (more than 1 minute)
+        if (createdTime && updatedTime && (updatedTime - createdTime) > 60000) {
+            return {
+                timestamp: updatedAt,
+                label: 'Updated',
+                icon: '✏️'
+            };
+        }
+        
+        // Otherwise show created timestamp
+        return {
+            timestamp: createdAt,
+            label: 'Created',
+            icon: '🕒'
+        };
+    };
+
+    const displayInfo = getDisplayTimestamp();
 
     const cardBg = useColorModeValue('white', 'rgba(30, 41, 59, 0.95)');
     const cardBorder = useColorModeValue('1.5px solid #e2e8f0', '1.5px solid rgba(99, 179, 237, 0.25)');
@@ -65,16 +121,28 @@ export default function NoteCard({title, body, user, _id, createdAt, important, 
             cursor="pointer"
         >
             <HStack w="100%" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                <Text 
-                    fontSize="sm" 
-                    color={subTextColor} 
-                    fontWeight="600"
-                    textTransform="uppercase"
-                    letterSpacing="wide"
-                    opacity={0.8}
-                >
-                    Note {noteNumber}
-                </Text>
+                <VStack align="flex-start" spacing={1}>
+                    <Text 
+                        fontSize="sm" 
+                        color={subTextColor} 
+                        fontWeight="600"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                        opacity={0.8}
+                    >
+                        Note {noteNumber}
+                    </Text>
+                    {displayInfo.timestamp && (
+                        <Text 
+                            fontSize="xs" 
+                            color={subTextColor} 
+                            opacity={0.7}
+                            fontWeight="500"
+                        >
+                            {displayInfo.icon} {displayInfo.label} {formatTimestamp(displayInfo.timestamp)}
+                        </Text>
+                    )}
+                </VStack>
                 {important && (
                     <Badge 
                         colorScheme="green" 

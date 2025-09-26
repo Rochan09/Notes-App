@@ -12,7 +12,8 @@ import {
   Spinner,
   Badge,
   Flex,
-
+  useDisclosure,
+  useColorModeValue,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -25,7 +26,8 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
-  Box
+  Box,
+  Tooltip
 } from "@chakra-ui/react";
 import {
   EditIcon,
@@ -78,6 +80,62 @@ const EnhancedNoteCard = ({
 
   // Extract search terms for highlighting
   const searchWords = searchTerm ? searchTerm.split(/\s+/).filter(word => word.length > 0) : [];
+
+  // Format timestamp function
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMs = now - date;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    // Get formatted date and time
+    const timeString = date.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    const dateString = date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
+
+    if (diffInMinutes < 1) return `just now (${timeString})`;
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago (${timeString})`;
+    if (diffInHours < 24) return `${diffInHours}h ago (${timeString})`;
+    if (diffInDays < 7) return `${diffInDays}d ago (${dateString} ${timeString})`;
+    
+    // For older notes, show full date and time
+    return `${dateString} at ${timeString}`;
+  };
+
+  // Determine which timestamp to show and what label to use
+  const getDisplayTimestamp = () => {
+    const createdTime = createdAt ? new Date(createdAt) : null;
+    const updatedTime = updatedAt ? new Date(updatedAt) : null;
+    
+    // If both timestamps exist and updatedAt is significantly later than createdAt (more than 1 minute)
+    if (createdTime && updatedTime && (updatedTime - createdTime) > 60000) {
+      return {
+        timestamp: updatedAt,
+        label: 'Updated',
+        showBoth: true
+      };
+    }
+    
+    // Otherwise show created timestamp
+    return {
+      timestamp: createdAt,
+      label: 'Created',
+      showBoth: false
+    };
+  };
+
+  const displayInfo = getDisplayTimestamp();
 
   const updateNote = () => {
     if (!tempTitle.trim() || !tempBody.trim()) {
@@ -244,6 +302,31 @@ const EnhancedNoteCard = ({
                     </Badge>
                   )}
                 </Flex>
+              )}
+              
+              {/* Timestamp */}
+              {displayInfo.timestamp && (
+                <VStack align="start" spacing={1}>
+                  <Text 
+                    fontSize="xs" 
+                    color={useColorModeValue('gray.500', 'gray.400')} 
+                    opacity={0.8}
+                    fontWeight="500"
+                  >
+                    <TimeIcon boxSize={3} mr={1} />
+                    {displayInfo.label} {formatTimestamp(displayInfo.timestamp)}
+                  </Text>
+                  {displayInfo.showBoth && createdAt && (
+                    <Text 
+                      fontSize="xs" 
+                      color={useColorModeValue('gray.400', 'gray.500')} 
+                      opacity={0.6}
+                      fontWeight="400"
+                    >
+                      Originally created {formatTimestamp(createdAt)}
+                    </Text>
+                  )}
+                </VStack>
               )}
             </VStack>
 

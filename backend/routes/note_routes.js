@@ -46,7 +46,9 @@ noteRouter.post("/create", async(req, res)=>{
 noteRouter.patch("/", async(req, res)=>{
     let {id} = req.headers
     try {
-        await NoteModel.findByIdAndUpdate({_id: id}, req.body)
+        // Add updatedAt timestamp when updating a note
+        const updateData = { ...req.body, updatedAt: new Date() };
+        await NoteModel.findByIdAndUpdate({_id: id}, updateData)
         res.send({
             message: "Note updated",
             status: 1

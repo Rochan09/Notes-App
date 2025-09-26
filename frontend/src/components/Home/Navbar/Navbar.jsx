@@ -21,6 +21,7 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
+  Divider,
   useDisclosure,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, SearchIcon } from '@chakra-ui/icons';
@@ -372,119 +373,186 @@ export default function Navbar({ onSearch }) {
             }}
           />
           <DrawerBody p={4} pt={8} pb={4}>
-            {/* Mobile Search Bar - Only show on notes page AND when user is logged in */}
-            {auth && location.pathname === '/notes' && (
-              <Box mb={2}>
-                <InputGroup size="xs">
-                  <InputLeftElement pointerEvents="none" height="100%" pl={1}>
-                    <SearchIcon color={colorMode === 'dark' ? '#b3d1ff' : '#7b8db0'} boxSize={2.5} />
+            {/* Mobile Search Bar - Only show when user is logged in */}
+            {auth && (
+              <Box mb={3}>
+                <InputGroup size="sm">
+                  <InputLeftElement pointerEvents="none" height="100%" pl={2}>
+                    <Text fontSize="sm">🔍</Text>
                   </InputLeftElement>
                   <Input
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Search notes..."
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
                       onSearch && onSearch(e.target.value);
                     }}
                     fontSize="xs"
-                    pl={6}
+                    pl={8}
                     py={1}
-                    h="28px"
-                    borderRadius="md"
-                    bg={colorMode === 'dark' ? 'rgba(40, 54, 85, 0.4)' : 'rgba(255, 255, 255, 0.8)'}
-                    color={colorMode === 'dark' ? '#e0e7ff' : '#181f34'}
-                    _placeholder={{ color: colorMode === 'dark' ? '#b3d1ff' : '#7b8db0', fontSize: 'xs' }}
+                    h="32px"
+                    borderRadius="full"
+                    bg={colorMode === 'dark' ? 'rgba(40, 54, 85, 0.4)' : 'rgba(255, 255, 255, 0.9)'}
+                    color={colorMode === 'dark' ? '#e0e7ff' : '#374151'}
+                    _placeholder={{ color: colorMode === 'dark' ? '#b3d1ff' : '#6b7280', fontSize: 'xs' }}
                     boxShadow="none"
                     border={colorMode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'}
                     _focus={{
-                      boxShadow: 'none',
-                      borderColor: '#4F8CFF'
+                      boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)',
+                      borderColor: '#3b82f6'
                     }}
                   />
                 </InputGroup>
               </Box>
             )}
-            <Stack spacing={1.5}>
-              {!auth && (
+            
+            <Stack spacing={2}>
+              {/* Navigation Section */}
+              <Stack spacing={1}>
+                {!auth && (
+                  <Box
+                    as={NavLink}
+                    to="/"
+                    onClick={onDrawerClose}
+                    display="flex"
+                    alignItems="center"
+                    px={3}
+                    py={2.5}
+                    borderRadius="lg"
+                    fontSize="sm"
+                    fontWeight="medium"
+                    color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
+                    bg="transparent"
+                    _hover={{
+                      bg: colorMode === 'dark' ? 'blue.500/20' : 'blue.50',
+                      color: colorMode === 'dark' ? 'blue.300' : 'blue.600',
+                      boxShadow: 'sm'
+                    }}
+                    transition="all 0.2s"
+                    cursor="pointer"
+                  >
+                    <Text fontSize="md" mr={3}>🏠</Text> Home
+                  </Box>
+                )}
+                
                 <Box
                   as={NavLink}
-                  to="/"
+                  to="/notes"
                   onClick={onDrawerClose}
                   display="flex"
                   alignItems="center"
                   px={3}
-                  py={2}
-                  borderRadius="full"
-                  fontSize="xs"
-                  fontWeight="semibold"
-                  color="white"
-                  bg={colorMode === 'dark' ? 'gray.700' : 'gray.600'}
+                  py={2.5}
+                  borderRadius="lg"
+                  fontSize="sm"
+                  fontWeight="medium"
+                  color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
+                  bg="transparent"
                   _hover={{
-                    bg: colorMode === 'dark' ? 'yellow.600' : 'yellow.500',
-                    transform: 'translateY(-1px)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                    bg: colorMode === 'dark' ? 'blue.500/20' : 'blue.50',
+                    color: colorMode === 'dark' ? 'blue.300' : 'blue.600',
+                    boxShadow: 'sm'
                   }}
                   transition="all 0.2s"
                   cursor="pointer"
                 >
-                  <FaHome style={{ fontSize: 12, marginRight: '8px' }} /> Home
+                  <Text fontSize="md" mr={3}>📝</Text> Notes
                 </Box>
-              )}
-              <Box
-                as={NavLink}
-                to="/notes"
-                onClick={onDrawerClose}
-                display="flex"
-                alignItems="center"
-                px={3}
-                py={2}
-                borderRadius="full"
-                fontSize="xs"
-                fontWeight="semibold"
-                color="white"
-                bg={colorMode === 'dark' ? 'gray.700' : 'gray.600'}
-                _hover={{
-                  bg: colorMode === 'dark' ? 'emerald.600' : 'emerald.500',
-                  transform: 'translateY(-1px)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                }}
-                transition="all 0.2s"
-                cursor="pointer"
-              >
-                <FaRegStickyNote style={{ fontSize: 12, marginRight: '8px' }} /> Notes
-              </Box>
-              {auth && (
-                <Box mt={2} pt={2} borderTop="1px solid" borderColor={colorMode === 'light' ? 'gray.300' : 'gray.600'}>
-                  <Flex align="center" mb={2} px={1}>
-                    <Avatar size="xs" src={'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'} />
-                    <Text fontSize="xs" fontWeight="medium" ml={2} color={colorMode === 'dark' ? 'gray.100' : 'gray.600'} isTruncated>
-                      {user}
-                    </Text>
-                  </Flex>
-                  <Button
-                    size="sm"
+                
+                {auth && (
+                  <Box
+                    as={NavLink}
+                    to="/notes/create"
+                    onClick={onDrawerClose}
+                    display="flex"
+                    alignItems="center"
                     px={3}
-                    py={2}
-                    borderRadius="full"
-                    fontSize="xs"
-                    fontWeight="semibold"
-                    color="white"
-                    bg={colorMode === 'dark' ? 'red.600' : 'red.500'}
-                    onClick={handleLogout}
-                    w="full"
-                    h="32px"
-                    leftIcon={<Text fontSize="sm">🚪</Text>}
+                    py={2.5}
+                    borderRadius="lg"
+                    fontSize="sm"
+                    fontWeight="medium"
+                    color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
+                    bg="transparent"
                     _hover={{
-                      bg: colorMode === 'dark' ? 'red.700' : 'red.600',
-                      transform: 'translateY(-1px)',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+                      bg: colorMode === 'dark' ? 'green.500/20' : 'green.50',
+                      color: colorMode === 'dark' ? 'green.300' : 'green.600',
+                      boxShadow: 'sm'
                     }}
                     transition="all 0.2s"
+                    cursor="pointer"
                   >
-                    Logout
-                  </Button>
-                </Box>
+                    <Text fontSize="md" mr={3}>➕</Text> New Note
+                  </Box>
+                )}
+              </Stack>
+              
+              {auth && (
+                <>
+                  {/* Divider */}
+                  <Divider borderColor={colorMode === 'light' ? 'gray.200' : 'gray.600'} />
+                  
+                  {/* User Profile Section */}
+                  <Box px={1}>
+                    <Flex align="center" mb={3} px={2} py={1}>
+                      <Text fontSize="md" mr={3}>👤</Text>
+                      <Text fontSize="sm" fontWeight="medium" color={colorMode === 'dark' ? 'gray.100' : 'gray.700'} isTruncated>
+                        {user}
+                      </Text>
+                    </Flex>
+                    
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      px={3}
+                      py={2.5}
+                      borderRadius="lg"
+                      fontSize="sm"
+                      fontWeight="medium"
+                      color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
+                      bg="transparent"
+                      _hover={{
+                        bg: colorMode === 'dark' ? 'gray.500/20' : 'gray.50',
+                        color: colorMode === 'dark' ? 'gray.100' : 'gray.600',
+                        boxShadow: 'sm'
+                      }}
+                      transition="all 0.2s"
+                      cursor="pointer"
+                      mb={2}
+                    >
+                      <Text fontSize="md" mr={3}>⚙️</Text> Settings
+                    </Box>
+                  </Box>
+                  
+                  {/* Divider */}
+                  <Divider borderColor={colorMode === 'light' ? 'gray.200' : 'gray.600'} />
+                  
+                  {/* Logout Section */}
+                  <Box px={1}>
+                    <Button
+                      variant="ghost"
+                      onClick={handleLogout}
+                      fontSize="sm"
+                      fontWeight="medium"
+                      w="full"
+                      h="auto"
+                      py={2.5}
+                      px={3}
+                      justifyContent="flex-start"
+                      borderRadius="lg"
+                      color={colorMode === 'dark' ? 'red.300' : 'red.600'}
+                      bg="transparent"
+                      _hover={{
+                        bg: colorMode === 'dark' ? 'red.500/20' : 'red.50',
+                        color: colorMode === 'dark' ? 'red.200' : 'red.700',
+                        boxShadow: 'sm'
+                      }}
+                      transition="all 0.2s"
+                    >
+                      <Text fontSize="md" mr={3}>🚪</Text> Logout
+                    </Button>
+                  </Box>
+                </>
               )}
             </Stack>
           </DrawerBody>

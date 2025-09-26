@@ -167,7 +167,7 @@ export default function Loginpage() {
                     align={{ base: 'flex-start', lg: 'center' }}
                     justify="center"
                     p={{ base: 8, md: 12, lg: 16 }}
-                    pt={{ base: 4, md: 6, lg: 8 }}
+                    pt={{ base: 2, md: 3, lg: 4 }}
                     position="relative"
                     minH={{ base: '60vh', lg: '100vh' }}
                     bg={formGlassBg}
@@ -180,7 +180,7 @@ export default function Loginpage() {
                             fontSize={{ base: '2xl', md: '3xl' }}
                             color={titleColor}
                             textAlign="center"
-                            mb={6}
+                            mb={3}
                         >
                             Sign In
                         </Heading>
@@ -255,7 +255,7 @@ export default function Loginpage() {
                                 <Text 
                                     align={'center'}
                                     color={signupLinkColor}
-                                    fontSize="sm"
+                                    fontSize="md"
                                 >
                                     Not a member?{' '}
                                     <Link 

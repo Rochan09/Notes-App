@@ -12,7 +12,6 @@ import {
     Text,
     IconButton,
     Divider,
-    Checkbox,
     FormControl,
     FormLabel,
     Flex,
@@ -41,7 +40,6 @@ import {
 export default function EditNotePage() {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
-    const [isImportant, setIsImportant] = useState(false);
     const [noteFound, setNoteFound] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const textareaRef = useRef(null);
@@ -74,7 +72,6 @@ export default function EditNotePage() {
             if (noteToEdit) {
                 setTitle(noteToEdit.title);
                 setBody(noteToEdit.body);
-                setIsImportant(noteToEdit.important || false);
                 setNoteFound(true);
             } else {
                 setNoteFound(false);
@@ -113,8 +110,7 @@ export default function EditNotePage() {
         
         dispatch(updateNotes(id, { 
             title: title.trim(), 
-            body: body.trim(),
-            important: isImportant
+            body: body.trim()
         }));
         navigate('/notes');
     };
@@ -233,18 +229,6 @@ export default function EditNotePage() {
                                 }}
                             />
                         </FormControl>
-
-                        {/* Important Checkbox */}
-                        <Checkbox
-                            isChecked={isImportant}
-                            onChange={(e) => setIsImportant(e.target.checked)}
-                            colorScheme="green"
-                            size="lg"
-                            fontWeight="500"
-                            color={textColor700}
-                        >
-                            Is Important
-                        </Checkbox>
 
                         {/* Content Editor Section */}
                         <FormControl>

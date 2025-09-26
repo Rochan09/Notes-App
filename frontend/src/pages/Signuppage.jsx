@@ -159,7 +159,7 @@ export default function Signuppage() {
                     align="flex-start"
                     justify="center"
                     p={{ base: 8, md: 12, lg: 16 }}
-                    pt={{ base: 12, md: 16, lg: 20 }}
+                    pt={{ base: 6, md: 8, lg: 10 }}
                     position="relative"
                     minH={{ base: '40vh', lg: '100vh' }}
                 >
@@ -233,17 +233,25 @@ export default function Signuppage() {
                                         opacity: '1'
                                     },
                                 },
-                                '@keyframes float-bubble-3': {
-                                    '0%, 100%': { 
-                                        transform: 'translateY(0px) translateX(0px) scale(1) rotate(0deg)',
+                                '@keyframes create-account-animation': {
+                                    '0%': { 
+                                        transform: 'translateY(0px) scale(1)',
                                         opacity: '0.6'
                                     },
-                                    '40%': { 
-                                        transform: 'translateY(-10px) translateX(15px) scale(1.05) rotate(10deg)',
+                                    '25%': { 
+                                        transform: 'translateY(-10px) scale(1.1)',
+                                        opacity: '1'
+                                    },
+                                    '50%': { 
+                                        transform: 'translateY(-5px) scale(1.05)',
                                         opacity: '0.9'
                                     },
-                                    '80%': { 
-                                        transform: 'translateY(8px) translateX(-10px) scale(0.9) rotate(-5deg)',
+                                    '75%': { 
+                                        transform: 'translateY(-15px) scale(1.15)',
+                                        opacity: '1'
+                                    },
+                                    '100%': { 
+                                        transform: 'translateY(0px) scale(1)',
                                         opacity: '0.8'
                                     },
                                 },
@@ -307,30 +315,62 @@ export default function Signuppage() {
                                 }}
                             />
                             
-                            {/* Floating bubble 3 */}
+                            {/* Account Creation Animation */}
                             <Box
                                 position="absolute"
                                 left="120px"
                                 top="25px"
-                                w="40px"
-                                h="40px"
-                                bg="linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(34, 197, 94, 0.3))"
+                                w="45px"
+                                h="45px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                bg="linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(16, 185, 129, 0.4))"
                                 borderRadius="full"
-                                border="2px solid rgba(20, 184, 166, 0.35)"
-                                backdropFilter="blur(12px)"
-                                animation="float-bubble-3 6s ease-in-out infinite 1s, glow-pulse 5s ease-in-out infinite 2s"
-                                _before={{
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: '12px',
-                                    left: '12px',
-                                    w: '16px',
-                                    h: '16px',
-                                    bg: 'rgba(255, 255, 255, 0.4)',
-                                    borderRadius: 'full',
-                                    filter: 'blur(1px)',
-                                }}
-                            />
+                                border="2px solid rgba(34, 197, 94, 0.5)"
+                                backdropFilter="blur(15px)"
+                                animation="create-account-animation 4s ease-in-out infinite, glow-pulse 3s ease-in-out infinite 0.5s"
+                                boxShadow="0 4px 20px rgba(34, 197, 94, 0.3)"
+                            >
+                                <Text 
+                                    fontSize="18px" 
+                                    filter="drop-shadow(0 0 4px rgba(255,255,255,0.8))"
+                                    sx={{
+                                        '@keyframes user-create': {
+                                            '0%, 100%': { transform: 'scale(1)' },
+                                            '50%': { transform: 'scale(1.2)' }
+                                        },
+                                        animation: 'user-create 2s ease-in-out infinite'
+                                    }}
+                                >
+                                    👤
+                                </Text>
+                                {/* Plus sign for "creating" */}
+                                <Text 
+                                    position="absolute"
+                                    top="-5px"
+                                    right="-5px"
+                                    fontSize="12px"
+                                    color="white"
+                                    bg="rgba(34, 197, 94, 0.8)"
+                                    borderRadius="full"
+                                    w="16px"
+                                    h="16px"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    fontWeight="bold"
+                                    sx={{
+                                        '@keyframes plus-pulse': {
+                                            '0%, 100%': { transform: 'scale(0.8)', opacity: '0.7' },
+                                            '50%': { transform: 'scale(1.1)', opacity: '1' }
+                                        },
+                                        animation: 'plus-pulse 1.5s ease-in-out infinite'
+                                    }}
+                                >
+                                    +
+                                </Text>
+                            </Box>
                         </Box>
                     </Stack>
                 </Flex>
@@ -340,7 +380,7 @@ export default function Signuppage() {
                     align={{ base: 'flex-start', lg: 'center' }}
                     justify="center"
                     p={{ base: 6, md: 8, lg: 12 }}
-                    pt={{ base: 8, md: 12, lg: 16 }}
+                    pt={{ base: 2, md: 3, lg: 4 }}
                     position="relative"
                     minH={{ base: '60vh', lg: '100vh' }}
                     bg={useColorModeValue(
@@ -356,7 +396,7 @@ export default function Signuppage() {
                             fontSize={{ base: '2xl', md: '3xl' }}
                             color={useColorModeValue('gray.800', 'white')}
                             textAlign="center"
-                            mb={4}
+                            mb={2}
                         >
                             Create Account
                         </Heading>
@@ -475,7 +515,7 @@ export default function Signuppage() {
                                 <Text 
                                     align={'center'}
                                     color={useColorModeValue("gray.600", "gray.100")}
-                                    fontSize="sm"
+                                    fontSize="md"
                                     pt={4}
                                 >
                                     Already a user?{' '}

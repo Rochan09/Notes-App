@@ -122,7 +122,7 @@ function Notespage({ searchQuery }) {
       )}
       {!loading && !error && filteredNotes.length > 0 && (
         <Grid gap={10} w={"100%"} margin={"auto"} gridTemplateColumns="repeat(auto-fill, minmax(240px, 1fr))">
-          {filteredNotes.map((el, index) => <NoteCard key={el._id} {...el} createdAt={el.createdAt} noteNumber={index + 1} />)}
+          {filteredNotes.map((el, index) => <NoteCard key={el._id} {...el} createdAt={el.createdAt} updatedAt={el.updatedAt} noteNumber={index + 1} />)}
         </Grid>
       )}
     </Box>
