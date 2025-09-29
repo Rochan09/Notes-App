@@ -37,7 +37,14 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 
 ## 📸 Screenshots
 
-![App Thumbnail](./frontend/public/Thumbnail.png) 
+### 🔑 Login Page
+![Login Page](./frontend/public/Loginpage.png)
+
+### 🆕 Signup Page
+![Signup Page](./frontend/public/Signuppage.png)
+
+### 📝 Notes Page
+![Notes Page](./frontend/public/Notespage.png)
 
 ---
 

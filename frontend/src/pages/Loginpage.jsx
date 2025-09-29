@@ -22,6 +22,7 @@ import { getUser } from '../redux/users/user_actions';
 import { useNavigate } from 'react-router-dom';
 
 export default function Loginpage() {
+    const [forgotLoading, setForgotLoading] = useState(false);
     // All hooks at the top level
     const {auth, token, loading, error} = useSelector((state)=>state.userReducer)
     const nav = useNavigate()
@@ -30,6 +31,9 @@ export default function Loginpage() {
     const [showPassword, setShowPassword] = useState(false);
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
     const [showMessages, setShowMessages] = useState(false);
+        const [showForgotModal, setShowForgotModal] = useState(false);
+        const [forgotEmail, setForgotEmail] = useState("");
+        const [forgotStatus, setForgotStatus] = useState("");
     const dispatch = useDispatch()
     
     // Sliding messages for user engagement
@@ -230,6 +234,9 @@ export default function Loginpage() {
                                         </InputRightElement>
                                     </InputGroup>
                                 </FormControl>
+                                   <Text align="right" fontSize="sm" color={linkColor} mt={1} cursor="pointer" _hover={{ textDecoration: 'underline' }} onClick={() => setShowForgotModal(true)}>
+                                       Forgot password?
+                                   </Text>
 
                                 <Button
                                     type="submit"
@@ -320,6 +327,44 @@ export default function Loginpage() {
                                 )}
                             </Stack>
                         </form>
+                        {/* Forgot Password Modal */}
+                        {showForgotModal && (
+                            <Box position="fixed" top={0} left={0} right={0} bottom={0} bg="rgba(0,0,0,0.3)" zIndex={9999} display="flex" alignItems="center" justifyContent="center">
+                                <Box bg={cardBg} p={{ base: 4, md: 8 }} borderRadius="2xl" boxShadow="2xl" minW={{ base: '90vw', md: '320px' }} maxW={{ base: '95vw', md: '400px' }} w="full" position="relative" m="auto">
+                                    <Heading fontSize="xl" mb={4} color={titleColor} textAlign="center">Forgot Password</Heading>
+                                    <Text fontSize="md" mb={2} color={subtitleColor} textAlign="center">Enter your registered email address to reset your password.</Text>
+                                    <form onSubmit={e => {
+                                        e.preventDefault();
+                                        setForgotStatus('');
+                                        setForgotLoading(true);
+                                        fetch('/api/forgot-password', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ email: forgotEmail })
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            setForgotLoading(false);
+                                            if (data.status === 1) {
+                                                setForgotStatus('success');
+                                            } else {
+                                                setForgotStatus('error');
+                                            }
+                                        })
+                                        .catch(() => { setForgotLoading(false); setForgotStatus('error'); });
+                                    }}>
+                                        <FormControl mb={4}>
+                                            <FormLabel color={formLabelColor}>Email address</FormLabel>
+                                            <Input value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} type="email" placeholder="Enter your email" />
+                                        </FormControl>
+                                        <Button type="submit" colorScheme="blue" w="100%" mb={2} isLoading={forgotLoading} loadingText="Sending...">Send Reset Link</Button>
+                                        <Button variant="ghost" w="100%" onClick={() => { setShowForgotModal(false); setForgotEmail(""); setForgotStatus(""); }}>Cancel</Button>
+                                    </form>
+                                    {forgotStatus === 'success' && <Text color="green.500" mt={3} textAlign="center">Password reset link sent to your email.</Text>}
+                                    {forgotStatus === 'error' && <Text color="red.500" mt={3} textAlign="center">Email not found. Please check and try again.</Text>}
+                                </Box>
+                            </Box>
+                        )}
                     </Box>
                 </Flex>
             </Stack>
