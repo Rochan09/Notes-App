@@ -171,16 +171,21 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             >
                 {title}
             </Text>
-            <Text 
+            <Box 
                 color={bodyTextColor} 
                 fontSize="md" 
                 mb={4} 
-                noOfLines={2}
                 lineHeight="1.5"
                 opacity={0.9}
-            >
-                {body}
-            </Text>
+                sx={{
+                  'ol, ul': { marginLeft: '1.2em', paddingLeft: '0.5em' },
+                  'li': { marginBottom: '0.2em' },
+                  'strong': { fontWeight: 'bold' },
+                  'em': { fontStyle: 'italic' },
+                  'u': { textDecoration: 'underline' },
+                }}
+                dangerouslySetInnerHTML={{ __html: body }}
+            />
             <HStack w="100%" justifyContent="flex-end" alignItems="flex-end" mt="auto">
                 <HStack spacing={3}>
                     <IconButton

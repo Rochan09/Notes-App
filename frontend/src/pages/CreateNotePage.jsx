@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { 
     Box, 
     Input, 
@@ -87,18 +89,51 @@ export default function CreateNotePage() {
                                 _placeholder={{ color: useColorModeValue('#7b8db0', '#a0aec0') }}
                             />
                             
-                            <Textarea
-                                placeholder="Write your note here..."
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                                minH="400px"
-                                fontSize="md"
-                                borderRadius="lg"
-                                resize="vertical"
-                                borderColor={useColorModeValue('#e2e8f0', '#4a5568')}
-                                _focus={{ borderColor: '#4F8CFF', boxShadow: '0 0 0 2px #4F8CFF' }}
-                                _placeholder={{ color: useColorModeValue('#7b8db0', '#a0aec0') }}
-                            />
+                                                        <Box
+                                                                bg="white"
+                                                                borderRadius="xl"
+                                                                boxShadow="0 4px 24px rgba(80,112,255,0.10)"
+                                                                border="1.5px solid #e2e8f0"
+                                                                p={2}
+                                                                mb={2}
+                                                                sx={{
+                                                                    '.ql-toolbar': {
+                                                                        borderRadius: '8px 8px 0 0',
+                                                                        background: '#f5f8ff',
+                                                                        border: 'none',
+                                                                        padding: '8px',
+                                                                        fontSize: '1.1rem',
+                                                                        button: {
+                                                                            margin: '0 4px',
+                                                                            borderRadius: '6px',
+                                                                            transition: 'background 0.2s',
+                                                                        },
+                                                                        'button:hover': {
+                                                                            background: '#e0e7ff',
+                                                                        },
+                                                                    },
+                                                                    '.ql-container': {
+                                                                        borderRadius: '0 0 8px 8px',
+                                                                        minHeight: '220px',
+                                                                        fontSize: '1.1rem',
+                                                                        background: '#fff',
+                                                                        border: 'none',
+                                                                        padding: '12px',
+                                                                    },
+                                                                    '.ql-editor': {
+                                                                        minHeight: '180px',
+                                                                        fontSize: '1.1rem',
+                                                                        color: '#222',
+                                                                    },
+                                                                }}
+                                                        >
+                                                            <ReactQuill
+                                                                value={body}
+                                                                onChange={setBody}
+                                                                theme="snow"
+                                                                placeholder="Write your note here..."
+                                                            />
+                                                        </Box>
 
                             {/* Action Buttons */}
                             <HStack spacing={4} justify="flex-end" pt={4}>

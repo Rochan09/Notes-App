@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { 
     Box, 
     Input, 
@@ -42,7 +44,6 @@ export default function EditNotePage() {
     const [body, setBody] = useState('');
     const [noteFound, setNoteFound] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const textareaRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
@@ -80,27 +81,6 @@ export default function EditNotePage() {
         }
     }, [id, notes]);
 
-    // Formatting functions for rich text
-    const formatText = (command, value = null) => {
-        document.execCommand(command, false, value);
-        textareaRef.current?.focus();
-    };
-
-    const insertAtCursor = (text) => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const newBody = body.substring(0, start) + text + body.substring(end);
-            setBody(newBody);
-            
-            // Reset cursor position
-            setTimeout(() => {
-                textarea.focus();
-                textarea.setSelectionRange(start + text.length, start + text.length);
-            }, 0);
-        }
-    };
 
     const handleSubmit = () => {
         if (!title.trim() || !body.trim()) {
@@ -231,126 +211,56 @@ export default function EditNotePage() {
                         </FormControl>
 
                         {/* Content Editor Section */}
-                        <FormControl>
-                            <FormLabel fontSize="sm" color={textColor600} fontWeight="600">
-                                Enter A Note Description
-                            </FormLabel>
-
-                            {/* Formatting Toolbar */}
-                            <Box
-                                bg={toolbarBg}
-                                p={3}
-                                borderRadius="lg"
-                                border="1px solid"
-                                borderColor={inputBorderColor}
-                                mb={2}
-                            >
-                                <HStack spacing={1} wrap="wrap">
-                                    {/* Text Formatting */}
-                                    <IconButton
-                                        icon={<FaBold />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('**Bold Text**')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Bold"
-                                    />
-                                    <IconButton
-                                        icon={<FaItalic />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('_Italic Text_')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Italic"
-                                    />
-                                    <IconButton
-                                        icon={<FaUnderline />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('<u>Underlined Text</u>')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Underline"
-                                    />
-                                    <IconButton
-                                        icon={<FaStrikethrough />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('~~Strikethrough Text~~')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Strikethrough"
-                                    />
-                                    
-                                    <Divider orientation="vertical" height="24px" mx={2} />
-
-                                    {/* Lists */}
-                                    <IconButton
-                                        icon={<FaListUl />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('\n• List item\n• List item\n')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Bullet List"
-                                    />
-                                    <IconButton
-                                        icon={<FaListOl />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('\n1. List item\n2. List item\n')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Numbered List"
-                                    />
-
-                                    <Divider orientation="vertical" height="24px" mx={2} />
-
-                                    {/* Special Elements */}
-                                    <IconButton
-                                        icon={<FaQuoteLeft />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('\n> Quote text here\n')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Quote"
-                                    />
-                                    <IconButton
-                                        icon={<FaCode />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('`code snippet`')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Code"
-                                    />
-                                    <IconButton
-                                        icon={<FaLink />}
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => insertAtCursor('[Link Text](https://example.com)')}
-                                        _hover={{ bg: buttonHover }}
-                                        title="Link"
-                                    />
-                                </HStack>
-                            </Box>
-
-                            {/* Text Area */}
-                            <Textarea
-                                ref={textareaRef}
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                                placeholder="Start writing..."
-                                minH="400px"
-                                fontSize="md"
-                                borderRadius="lg"
-                                resize="vertical"
-                                borderColor={inputBorderColor}
-                                bg="transparent"
-                                color={textColor700}
-                                lineHeight="1.6"
-                                _placeholder={{ color: placeholderColor }}
-                                _focus={{
-                                    borderColor: '#4F8CFF',
-                                    boxShadow: '0 0 0 2px #4F8CFF'
-                                }}
-                            />
-                        </FormControl>
+                                                <FormControl>
+                                                        <FormLabel fontSize="sm" color={textColor600} fontWeight="600">
+                                                                Enter A Note Description
+                                                        </FormLabel>
+                                                        <Box
+                                                                bg="white"
+                                                                borderRadius="xl"
+                                                                boxShadow="0 4px 24px rgba(80,112,255,0.10)"
+                                                                border="1.5px solid #e2e8f0"
+                                                                p={4}
+                                                                mb={2}
+                                                                sx={{
+                                                                    '.ql-toolbar': {
+                                                                        borderRadius: '8px 8px 0 0',
+                                                                        background: '#f5f8ff',
+                                                                        border: 'none',
+                                                                        padding: '8px',
+                                                                        fontSize: '1.1rem',
+                                                                        button: {
+                                                                            margin: '0 4px',
+                                                                            borderRadius: '6px',
+                                                                            transition: 'background 0.2s',
+                                                                        },
+                                                                        'button:hover': {
+                                                                            background: '#e0e7ff',
+                                                                        },
+                                                                    },
+                                                                    '.ql-container': {
+                                                                        borderRadius: '0 0 8px 8px',
+                                                                        minHeight: '220px',
+                                                                        fontSize: '1.1rem',
+                                                                        background: '#fff',
+                                                                        border: 'none',
+                                                                        padding: '12px',
+                                                                    },
+                                                                    '.ql-editor': {
+                                                                        minHeight: '180px',
+                                                                        fontSize: '1.1rem',
+                                                                        color: '#222',
+                                                                    },
+                                                                }}
+                                                        >
+                                                            <ReactQuill
+                                                                value={body}
+                                                                onChange={setBody}
+                                                                theme="snow"
+                                                                placeholder="Start writing..."
+                                                            />
+                                                        </Box>
+                                                </FormControl>
 
                         {/* Footer Info */}
                         <Box textAlign="right">

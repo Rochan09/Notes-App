@@ -254,11 +254,11 @@ export default function Navbar({ onSearch }) {
                 transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 p={1}
               >
-                <Avatar size={'sm'} src={'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'} />
+                <Avatar size={'sm'} src={'/astronaut.png'} />
               </MenuButton>
               <MenuList alignItems={'center'}>
                 <br />
-                <Center><Avatar size={'2xl'} src={'https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg'} /></Center>
+                <Center><Avatar size={'2xl'} src={'/astronaut.png'} /></Center>
                 <br />
                 <Center><p>{user}</p></Center>
                 <br />
@@ -501,27 +501,7 @@ export default function Navbar({ onSearch }) {
                       </Text>
                     </Flex>
                     
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      px={3}
-                      py={2.5}
-                      borderRadius="lg"
-                      fontSize="sm"
-                      fontWeight="medium"
-                      color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
-                      bg="transparent"
-                      _hover={{
-                        bg: colorMode === 'dark' ? 'gray.500/20' : 'gray.50',
-                        color: colorMode === 'dark' ? 'gray.100' : 'gray.600',
-                        boxShadow: 'sm'
-                      }}
-                      transition="all 0.2s"
-                      cursor="pointer"
-                      mb={2}
-                    >
-                      <Text fontSize="md" mr={3}>⚙️</Text> Settings
-                    </Box>
+                    {/* Settings removed */}
                   </Box>
                   
                   {/* Divider */}
