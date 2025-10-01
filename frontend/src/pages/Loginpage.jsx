@@ -14,6 +14,7 @@ import {
     Text,
     useColorModeValue,
     Spinner,
+    useToast,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
@@ -22,6 +23,7 @@ import { getUser } from '../redux/users/user_actions';
 import { useNavigate } from 'react-router-dom';
 
 export default function Loginpage() {
+    const toast = useToast();
     const [forgotLoading, setForgotLoading] = useState(false);
     // All hooks at the top level
     const {auth, token, loading, error} = useSelector((state)=>state.userReducer)
@@ -54,7 +56,7 @@ export default function Loginpage() {
         'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%)'
     );
     const welcomeBg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(0, 0, 0, 0.6)');
-    const formGlassBg = useColorModeValue('rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.1)');
+    const formGlassBg = useColorModeValue('rgba(255, 255, 255, 0.85)', 'rgba(30, 41, 59, 0.9)');
     const borderColor = useColorModeValue('rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)');
     const textColor = useColorModeValue('gray.700', 'white');
     const linkColor = useColorModeValue('blue.600', 'blue.300');
@@ -72,7 +74,7 @@ export default function Loginpage() {
         'linear(to-br, blue.400, purple.500, cyan.400)',
         'linear(to-br, blue.300, purple.300, cyan.300)'
     );
-    const messageColor = useColorModeValue('blue.600', 'blue.200');
+    const messageColor = useColorModeValue('blue.600', 'yellow.300');
 
     useEffect(() => {
         const original = document.body.style.overflow;
@@ -102,6 +104,15 @@ export default function Loginpage() {
     }, [showMessages, slidingMessages.length]);
 
     const handleLogin = () => {
+        if (!email.trim() || !password.trim()) {
+            toast({
+                title: 'Please fill in both email and password.',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
         setShowMessages(true); // Start showing messages when login begins
         setCurrentMessageIndex(0); // Start from first message
         dispatch(getUser({email, password}));
@@ -199,12 +210,17 @@ export default function Loginpage() {
                                         value={email} 
                                         onChange={(e)=>setEmail(e.target.value)} 
                                         type="email" 
-                                        bg="rgba(255, 255, 255, 0.1)"
+                                        bg={useColorModeValue("rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.05)")}
                                         backdropFilter="blur(10px)"
-                                        border="1px solid rgba(79, 140, 255, 0.2)"
+                                        border={useColorModeValue("1px solid rgba(79, 140, 255, 0.2)", "1px solid rgba(255, 255, 255, 0.1)")}
                                         borderRadius="xl"
                                         color={inputTextColor}
                                         placeholder="Enter your email"
+                                        _placeholder={{ color: useColorModeValue('#7b8db0', '#a0aec0') }}
+                                        _focus={{
+                                            borderColor: '#4F8CFF',
+                                            boxShadow: '0 0 0 2px #4F8CFF'
+                                        }}
                                     />
                                 </FormControl>
                                 
@@ -217,12 +233,17 @@ export default function Loginpage() {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             type={showPassword ? 'text' : 'password'}
-                                            bg="rgba(255, 255, 255, 0.1)"
+                                            bg={useColorModeValue("rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.05)")}
                                             backdropFilter="blur(10px)"
-                                            border="1px solid rgba(168, 85, 247, 0.2)"
+                                            border={useColorModeValue("1px solid rgba(168, 85, 247, 0.2)", "1px solid rgba(255, 255, 255, 0.1)")}
                                             borderRadius="xl"
                                             color={inputTextColor}
                                             placeholder="Enter your password"
+                                            _placeholder={{ color: useColorModeValue('#7b8db0', '#a0aec0') }}
+                                            _focus={{
+                                                borderColor: '#A855F7',
+                                                boxShadow: '0 0 0 2px #A855F7'
+                                            }}
                                         />
                                         <InputRightElement h={'full'}>
                                             <Button
@@ -247,16 +268,41 @@ export default function Loginpage() {
                                     size="lg"
                                     borderRadius="xl"
                                     w="100%"
-                                    isLoading={loading}
-                                    loadingText="Signing in..."
+                                    isLoading={false}
                                     _hover={{
                                         bg: useColorModeValue("rgba(34, 197, 94, 0.3)", "rgba(34, 197, 94, 0.9)"),
                                         transform: "translateY(-1px)",
                                         boxShadow: useColorModeValue("0 4px 12px rgba(34, 197, 94, 0.3)", "0 4px 12px rgba(34, 197, 94, 0.5)")
                                     }}
                                     transition="all 0.2s"
+                                    disabled={loading}
                                 >
-                                    📝 Sign in
+                                    {loading && showMessages ? (
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            gap={3}
+                                            width="100%"
+                                        >
+                                            <Spinner 
+                                                size="sm" 
+                                                color={messageColor}
+                                                thickness="2px"
+                                            />
+                                            <Text
+                                                key={currentMessageIndex}
+                                                fontSize="md"
+                                                color={messageColor}
+                                                fontWeight="500"
+                                                animation="slideInUp 3s ease-in-out, pulse-glow 3s ease-in-out"
+                                            >
+                                                {slidingMessages[currentMessageIndex]}
+                                            </Text>
+                                        </Box>
+                                    ) : (
+                                        "📝 Sign in"
+                                    )}
                                 </Button>
 
                                 <Text 
@@ -273,58 +319,7 @@ export default function Loginpage() {
                                     </Link>
                                 </Text>
 
-                                {/* Sliding Messages - Only show after clicking Sign In */}
-                                {showMessages && (
-                                    <Box 
-                                        mt={6} 
-                                        textAlign="center" 
-                                        height="60px" 
-                                        position="relative" 
-                                        overflow="hidden"
-                                        sx={{
-                                            '@keyframes slideInUp': {
-                                                '0%': { 
-                                                    transform: 'translateY(30px)',
-                                                    opacity: '0'
-                                                },
-                                                '20%, 80%': { 
-                                                    transform: 'translateY(0)',
-                                                    opacity: '1'
-                                                },
-                                                '100%': { 
-                                                    transform: 'translateY(-30px)',
-                                                    opacity: '0'
-                                                },
-                                            },
-                                            '@keyframes pulse-glow': {
-                                                '0%, 100%': { 
-                                                    filter: 'brightness(1)',
-                                                    textShadow: '0 0 10px rgba(59, 130, 246, 0.3)'
-                                                },
-                                                '50%': { 
-                                                    filter: 'brightness(1.1)',
-                                                    textShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
-                                                },
-                                            }
-                                        }}
-                                    >
-                                        <Text
-                                            key={currentMessageIndex}
-                                            fontSize="sm"
-                                            color={messageColor}
-                                            fontWeight="500"
-                                            position="absolute"
-                                            width="100%"
-                                            animation="slideInUp 3s ease-in-out, pulse-glow 3s ease-in-out"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            height="100%"
-                                        >
-                                            {slidingMessages[currentMessageIndex]}
-                                        </Text>
-                                    </Box>
-                                )}
+                                {/* Sliding Messages removed from below button */}
                             </Stack>
                         </form>
                         {/* Forgot Password Modal */}

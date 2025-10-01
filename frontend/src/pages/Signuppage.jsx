@@ -14,6 +14,7 @@ import {
     useColorModeValue,
     Link,
     Spinner,
+    useToast,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
@@ -22,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../redux/users/user_actions';
 
 export default function Signuppage() {
+    const toast = useToast();
     const statusMessages = [
         { emoji: '👨‍💼', text: 'Creating your secure account...' },
         { emoji: '🔐', text: 'Encrypting your data...' },
@@ -68,7 +70,15 @@ export default function Signuppage() {
     const particleBgImageDark = 'radial-gradient(circle at 20% 80%, rgba(79, 140, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(168, 85, 247, 0.08) 0%, transparent 50%)';
 
     const handleSignUp = async () => {
-        if (!name || !email || !password) return;
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            toast({
+                title: 'Please fill in all fields.',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
         try {
             await dispatch(registerUser({ name, email, password }));
             if (!loading && !error) {

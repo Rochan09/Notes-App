@@ -84,7 +84,7 @@ export default function Navbar({ onSearch }) {
         marginBottom: 0,
         background: colorMode === 'light' 
           ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
-          : 'linear-gradient(135deg, rgba(40, 54, 85, 0.3) 0%, rgba(79, 140, 255, 0.15) 100%)'
+          : '#232a3a'
       }}
     >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
