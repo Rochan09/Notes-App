@@ -48,6 +48,13 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 
 ---
 
+## 🙌 Inspiration
+
+This project was inspired by [**Arun Opal’s React Notes App**](https://github.com/arunopal/react-notes-app).  
+Huge thanks to him for the original concept and structure that guided this build.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
