@@ -12,14 +12,8 @@ import {
     Container,
     Spinner,
     Text,
-    IconButton,
-    Divider,
     FormControl,
     FormLabel,
-    Flex,
-    Textarea,
-    Stack,
-    Badge
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,10 +21,6 @@ import { updateNotes } from '../redux/notes/note_actions';
 import { toast } from 'react-toastify';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { 
-    FaBold, 
-    FaItalic, 
-    FaUnderline, 
-    FaStrikethrough,
     FaSave
 } from 'react-icons/fa';
 

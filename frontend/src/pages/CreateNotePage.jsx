@@ -4,7 +4,6 @@ import 'react-quill/dist/quill.snow.css';
 import { 
     Box, 
     Input, 
-    Textarea, 
     Button, 
     VStack, 
     Heading, 
