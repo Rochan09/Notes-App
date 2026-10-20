@@ -31,11 +31,6 @@ import {
     FaItalic, 
     FaUnderline, 
     FaStrikethrough,
-    FaListUl,
-    FaListOl,
-    FaLink,
-    FaCode,
-    FaQuoteLeft,
     FaSave
 } from 'react-icons/fa';
 
@@ -52,7 +47,6 @@ export default function EditNotePage() {
     // All useColorModeValue hooks must be called at the top level
     const bgColor = useColorModeValue('gray.50', 'gray.900');
     const cardBg = useColorModeValue('white', 'rgba(30, 41, 59, 0.95)');
-    const textColor = useColorModeValue('gray.800', 'gray.100');
     const textColor600 = useColorModeValue('gray.600', 'gray.400');
     const textColor700 = useColorModeValue('gray.700', 'white');
     const textColor300 = useColorModeValue('gray.600', 'gray.300');
@@ -61,10 +55,6 @@ export default function EditNotePage() {
     const borderColor = useColorModeValue('1.5px solid #e2e8f0', '1.5px solid rgba(255,255,255,0.18)');
     const inputBorderColor = useColorModeValue('#e2e8f0', '#4a5568');
     const placeholderColor = useColorModeValue('#7b8db0', '#a0aec0');
-    const outlineBorderColor = useColorModeValue('#e2e8f0', '#4a5568');
-    const outlineHoverBg = useColorModeValue('gray.50', 'gray.700');
-    const buttonBg = useColorModeValue('gray.100', 'gray.700');
-    const buttonHover = useColorModeValue('gray.200', 'gray.600');
 
     useEffect(() => {
         if (notes && notes.length > 0) {

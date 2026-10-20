@@ -21,6 +21,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/users/user_actions';
 import { useNavigate } from 'react-router-dom';
 
+const slidingMessages = [
+    "💡 Your notes are being prepared...",
+    "🚀 Setting up your workspace...",
+    "✨ Organizing your ideas...",
+    "🔐 Securing your data...",
+    "📚 Loading your personal library...",
+    "🎨 Customizing your experience...",
+    "🌟 Almost ready for you...",
+    "🎉 Welcome to your digital our notes!"
+];
+
 export default function Loginpage() {
     const toast = useToast();
     const [forgotLoading, setForgotLoading] = useState(false);
@@ -36,18 +47,6 @@ export default function Loginpage() {
         const [forgotEmail, setForgotEmail] = useState("");
         const [forgotStatus, setForgotStatus] = useState("");
     const dispatch = useDispatch()
-    
-    // Sliding messages for user engagement
-    const slidingMessages = [
-        "💡 Your notes are being prepared...",
-        "🚀 Setting up your workspace...",
-        "✨ Organizing your ideas...",
-        "🔐 Securing your data...",
-        "📚 Loading your personal library...",
-        "🎨 Customizing your experience...",
-        "🌟 Almost ready for you...",
-        "🎉 Welcome to your digital our notes!"
-    ];
     
     // All useColorModeValue hooks at the top level
     const bgGradient = useColorModeValue(
