@@ -65,7 +65,6 @@ export default function EditNotePage() {
     const outlineHoverBg = useColorModeValue('gray.50', 'gray.700');
     const buttonBg = useColorModeValue('gray.100', 'gray.700');
     const buttonHover = useColorModeValue('gray.200', 'gray.600');
-    const toolbarBg = useColorModeValue('gray.50', 'gray.800');
 
     useEffect(() => {
         if (notes && notes.length > 0) {

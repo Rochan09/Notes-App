@@ -5,7 +5,6 @@ import {
     FormLabel,
     Input,
     InputGroup,
-    InputLeftElement,
     InputRightElement,
     Stack,
     Link,
@@ -26,7 +25,7 @@ export default function Loginpage() {
     const toast = useToast();
     const [forgotLoading, setForgotLoading] = useState(false);
     // All hooks at the top level
-    const {auth, token, loading, error} = useSelector((state)=>state.userReducer)
+    const {auth, loading} = useSelector((state)=>state.userReducer)
     const nav = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -55,12 +54,8 @@ export default function Loginpage() {
         'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #bae6fd 50%, #7dd3fc 75%, #38bdf8 100%)',
         'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%)'
     );
-    const welcomeBg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(0, 0, 0, 0.6)');
     const formGlassBg = useColorModeValue('rgba(255, 255, 255, 0.85)', 'rgba(30, 41, 59, 0.9)');
-    const borderColor = useColorModeValue('rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)');
-    const textColor = useColorModeValue('gray.700', 'white');
     const linkColor = useColorModeValue('blue.600', 'blue.300');
-    const inputBg = useColorModeValue('rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)');
     const cardBg = useColorModeValue('rgba(255, 255, 255, 0.95)', 'rgba(30, 41, 59, 0.9)');
     const subtitleColor = useColorModeValue('gray.600', 'gray.100');
     const inspirationColor = useColorModeValue('gray.500', 'gray.200');
@@ -101,7 +96,7 @@ export default function Loginpage() {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [showMessages, slidingMessages.length]);
+    }, [showMessages]);
 
     const handleLogin = () => {
         if (!email.trim() || !password.trim()) {
