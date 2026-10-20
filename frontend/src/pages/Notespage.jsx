@@ -37,9 +37,9 @@ function Notespage({ searchQuery }) {
   };
 
   return (
-    <Box mt={8} padding={8}>
+    <Box mt={{ base: 4, md: 8 }} px={{ base: 3, sm: 5, md: 8 }} pb={{ base: 6, md: 8 }}>
       {/* Create Button - Left positioned */}
-      <Box mb={6} display="flex" justifyContent="flex-start" alignItems="center">
+      <Box mb={{ base: 4, md: 6 }} display="flex" justifyContent="flex-start" alignItems="center">
         <Button
           leftIcon={<AddIcon />}
           bg="#4F8CFF"
@@ -48,8 +48,8 @@ function Notespage({ searchQuery }) {
           onClick={handleCreateNote}
           isLoading={loading}
           borderRadius="xl"
-          px={8}
-          py={4}
+          px={{ base: 6, md: 8 }}
+          py={{ base: 3, md: 4 }}
           fontSize="md"
           fontWeight="semibold"
           _hover={{
@@ -121,7 +121,17 @@ function Notespage({ searchQuery }) {
         </Box>
       )}
       {!loading && !error && filteredNotes.length > 0 && (
-        <Grid gap={10} w={"100%"} margin={"auto"} gridTemplateColumns="repeat(auto-fill, minmax(240px, 1fr))">
+        <Grid
+          gap={{ base: 4, md: 6, lg: 8 }}
+          w="100%"
+          margin="auto"
+          gridTemplateColumns={{
+            base: "1fr",
+            sm: "repeat(2, minmax(0, 1fr))",
+            lg: "repeat(3, minmax(0, 1fr))",
+            xl: "repeat(4, minmax(0, 1fr))"
+          }}
+        >
           {filteredNotes.map((el, index) => <NoteCard key={el._id} {...el} createdAt={el.createdAt} updatedAt={el.updatedAt} noteNumber={index + 1} />)}
         </Grid>
       )}

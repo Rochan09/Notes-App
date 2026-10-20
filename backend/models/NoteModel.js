@@ -1,8 +1,9 @@
 const mongoose = require("mongoose")
 
 const noteSchema = mongoose.Schema({
-    title: {type: String, required: true},
-    body: {type: String, required: true},
+    title: {type: String, required: true, trim: true, maxlength: 200},
+    body: {type: String, required: true, trim: true, maxlength: 100000},
+    tags: {type: [String], default: []},
     user: {type: String, required: true}
 },{
     versionKey: false,

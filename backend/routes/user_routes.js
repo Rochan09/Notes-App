@@ -55,7 +55,7 @@ userRouter.post("/login", async(req, res)=>{
         //console.log(data)
         if(data.length > 0)
         {
-            let token = jwt.sign({userID: data[0]._id}, "your_secret_key", option);
+            let token = jwt.sign({userID: data[0]._id}, process.env.JWT_SECRET, option);
             bcrypt.compare(password, data[0].password, function(err, result)
             {
                 if(err) return res.send({

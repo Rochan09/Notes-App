@@ -23,6 +23,7 @@ import {
   DrawerBody,
   Divider,
   useDisclosure,
+  IconButton,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, SearchIcon } from '@chakra-ui/icons';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
@@ -105,7 +106,8 @@ export default function Navbar({ onSearch }) {
         </Box>
         {/* Theme toggle and Hamburger for mobile */}
         <Flex alignItems="center" display={{ base: 'flex', md: 'none' }}>
-          <Button 
+          <IconButton
+            aria-label={colorMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
             bg={colorMode === 'dark' ? 'rgba(20, 25, 40, 0.4)' : 'rgba(249, 115, 22, 0.15)'}
             backdropFilter="blur(10px)"
             border={colorMode === 'dark' ? '1px solid rgba(30, 35, 50, 0.5)' : '1px solid rgba(249, 115, 22, 0.25)'}
@@ -116,18 +118,19 @@ export default function Navbar({ onSearch }) {
               transform: 'translateY(-2px) scale(1.05)',
               boxShadow: colorMode === 'dark' ? '0 4px 15px rgba(20, 25, 40, 0.4)' : '0 8px 20px rgba(249, 115, 22, 0.2)'
             }} 
-            size="sm" 
+            size="sm"
+            icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             mr={2}
             borderRadius="12px"
             transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-          >
-            {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-          </Button>
-          <Box
+          />
+          <IconButton
+            aria-label={isDrawerOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            icon={<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>}
             onClick={isDrawerOpen ? onDrawerClose : onDrawerOpen}
-            cursor="pointer"
             aria-label="Open menu"
             p={2}
+            variant="ghost"
             borderRadius="12px"
             bg={colorMode === 'dark' ? 'rgba(15, 20, 35, 0.4)' : 'rgba(22, 163, 74, 0.1)'}
             backdropFilter="blur(10px)"
@@ -142,9 +145,7 @@ export default function Navbar({ onSearch }) {
               transform: 'scale(0.98)',
             }}
             transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
-          >
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </Box>
+          />
         </Flex>
         {/* Desktop Nav */}
         <Flex alignItems={'center'} display={{ base: 'none', md: 'flex' }} gap={4}>
@@ -156,6 +157,7 @@ export default function Navbar({ onSearch }) {
               </InputLeftElement>
               <Input
                 type="text"
+                aria-label="Search notes"
                 placeholder="Search notes..."
                 value={search}
                 onChange={(e) => {
@@ -382,6 +384,7 @@ export default function Navbar({ onSearch }) {
                   </InputLeftElement>
                   <Input
                     type="text"
+                    aria-label="Search notes"
                     placeholder="Search notes..."
                     value={search}
                     onChange={(e) => {

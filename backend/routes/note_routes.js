@@ -1,42 +1,42 @@
 const express = require("express")
 const { NoteModel } = require("../models/NoteModel")
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
 const { authenticator } = require("../middleware/auth")
 
 const noteRouter = express.Router()
 noteRouter.use(authenticator)
 
 noteRouter.get("/", async(req, res)=>{
-    let token = req.headers.authorization
-    jwt.verify(token, "your_secret_key", async(err, decode)=>{
-        try {
-            let data = await NoteModel.find({user:decode.userID})
-            res.send({
-                data: data,
-                message: "Successful",
-                status: 1
-            })
-        } catch (error) {
-            res.send({
-                message: error.message,
-                status: 0
-            })
-        }
-    })
-    
+    try {
+        const data = await NoteModel.find({user: req.user.id})
+        res.send({
+            data,
+            message: "Successful",
+            status: 1
+        })
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            status: 0
+        })
+    }
 })
 
 noteRouter.post("/create", async(req, res)=>{
     try {
-        let note = new NoteModel(req.body)
+        const { title, body, tags } = req.body
+        const note = new NoteModel({
+            title,
+            body,
+            ...(Array.isArray(tags) ? { tags } : {}),
+            user: req.user.id
+        })
         await note.save()
-        res.send({
+        res.status(201).send({
             message: "Note created",
             status: 1
         })
     } catch (error) {
-        res.send({
+        res.status(400).send({
             message: error.message,
             status: 0
         })
@@ -46,15 +46,30 @@ noteRouter.post("/create", async(req, res)=>{
 noteRouter.patch("/", async(req, res)=>{
     let {id} = req.headers
     try {
-        // Add updatedAt timestamp when updating a note
-        const updateData = { ...req.body, updatedAt: new Date() };
-        await NoteModel.findByIdAndUpdate({_id: id}, updateData)
+        const { title, body, tags } = req.body
+        const updateData = {
+            ...(title !== undefined ? { title } : {}),
+            ...(body !== undefined ? { body } : {}),
+            ...(Array.isArray(tags) ? { tags } : {}),
+            updatedAt: new Date()
+        }
+        const note = await NoteModel.findOneAndUpdate(
+            {_id: id, user: req.user.id},
+            updateData,
+            { new: true, runValidators: true }
+        )
+        if (!note) {
+            return res.status(404).send({
+                message: "Note not found",
+                status: 0
+            })
+        }
         res.send({
             message: "Note updated",
             status: 1
         })
     } catch (error) {
-        res.send({
+        res.status(400).send({
             message: error.message,
             status: 0
         })
@@ -64,13 +79,19 @@ noteRouter.patch("/", async(req, res)=>{
 noteRouter.delete("/", async(req, res)=>{
     let {id} = req.headers
     try {
-        await NoteModel.findByIdAndDelete({_id: id})
+        const note = await NoteModel.findOneAndDelete({_id: id, user: req.user.id})
+        if (!note) {
+            return res.status(404).send({
+                message: "Note not found",
+                status: 0
+            })
+        }
         res.send({
             message: "Note deleted",
             status: 1
         })
     } catch (error) {
-        res.send({
+        res.status(400).send({
             message: error.message,
             status: 0
         })

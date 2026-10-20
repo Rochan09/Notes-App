@@ -101,16 +101,17 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             boxShadow={cardShadow}
             border={cardBorder}
             style={{backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)'}}
-            p={6}
-            minW="280px"
-            maxW="340px"
+            p={{ base: 4, sm: 5, md: 6 }}
+            minW={0}
+            w="100%"
+            maxW="none"
             minH="180px"
             display="flex"
             flexDirection="column"
             justifyContent="space-between"
             alignItems="flex-start"
             position="relative"
-            m={2}
+            m={0}
             transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
             _hover={{
                 bg: hoverBg,
@@ -119,6 +120,11 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                 transform: 'translateY(-4px)',
             }}
             cursor="pointer"
+            _focusWithin={{
+                outline: "3px solid",
+                outlineColor: "blue.300",
+                outlineOffset: "2px"
+            }}
         >
             <HStack w="100%" justifyContent="space-between" alignItems="flex-start" mb={2}>
                 <VStack align="flex-start" spacing={1}>
@@ -191,7 +197,7 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                     <IconButton
                         icon={<FaTrashAlt />}
                         size="sm"
-                        aria-label="Delete"
+                        aria-label={`Delete note: ${title}`}
                         onClick={onDeleteOpen}
                         isLoading={loading}
                         bg={useColorModeValue('red.50', 'rgba(239, 68, 68, 0.1)')}
@@ -208,7 +214,7 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                     <IconButton
                         icon={<FaEdit />}
                         size="sm"
-                        aria-label="Edit"
+                        aria-label={`Edit note: ${title}`}
                         onClick={handleEdit}
                         isLoading={loading}
                         bg={useColorModeValue('blue.50', 'rgba(59, 130, 246, 0.1)')}

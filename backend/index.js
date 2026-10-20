@@ -4,6 +4,9 @@ const { connection } = require("./db")
 const { userRouter } = require("./routes/user_routes")
 const { noteRouter } = require("./routes/note_routes")
 require("dotenv").config()
+if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET must be set in backend/.env")
+}
 const port = process.env.PORT
 const app = express()
 app.use(cors())
