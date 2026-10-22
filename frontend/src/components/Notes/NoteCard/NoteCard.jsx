@@ -101,11 +101,11 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             boxShadow={cardShadow}
             border={cardBorder}
             style={{backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)'}}
-            p={{ base: 4, sm: 5, md: 6 }}
+            p={{ base: 4, sm: 4, md: 5 }}
             minW={0}
             w="100%"
             maxW="none"
-            minH="180px"
+            minH={{ base: '165px', md: '175px' }}
             display="flex"
             flexDirection="column"
             justifyContent="space-between"
@@ -126,10 +126,10 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                 outlineOffset: "2px"
             }}
         >
-            <HStack w="100%" justifyContent="space-between" alignItems="flex-start" mb={2}>
+            <HStack w="100%" justifyContent="space-between" alignItems="flex-start" mb={1}>
                 <VStack align="flex-start" spacing={1}>
                     <Text 
-                        fontSize="sm" 
+                        fontSize="xs" 
                         color={subTextColor} 
                         fontWeight="600"
                         textTransform="uppercase"
@@ -140,7 +140,7 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                     </Text>
                     {displayInfo.timestamp && (
                         <Text 
-                            fontSize="xs" 
+                            fontSize="2xs" 
                             color={subTextColor} 
                             opacity={0.7}
                             fontWeight="500"
@@ -169,8 +169,8 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             </HStack>
             <Text 
                 fontWeight="bold" 
-                fontSize="xl" 
-                mb={3} 
+                fontSize={{ base: 'lg', md: 'xl' }} 
+                mb={2} 
                 color={textColor}
                 lineHeight="1.3"
                 letterSpacing="tight"
@@ -179,11 +179,15 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             </Text>
             <Box 
                 color={bodyTextColor} 
-                fontSize="md" 
-                mb={4} 
+                fontSize="sm" 
+                mb={3} 
                 lineHeight="1.5"
                 opacity={0.9}
                 sx={{
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 3,
+                  overflow: 'hidden',
                   'ol, ul': { marginLeft: '1.2em', paddingLeft: '0.5em' },
                   'li': { marginBottom: '0.2em' },
                   'strong': { fontWeight: 'bold' },

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, Heading, HStack, Text, useColorModeValue } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,8 @@ function Notespage({ searchQuery }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const headingColor = useColorModeValue('gray.800', 'white');
+  const mutedColor = useColorModeValue('gray.500', 'gray.400');
 
   // Select notes from Redux store
   const notes = useSelector((state) => state.noteReducer.data || []);
@@ -44,18 +46,32 @@ function Notespage({ searchQuery }) {
       pt={{ base: 5, md: 8 }}
       pb={{ base: 8, md: 12 }}
     >
-      {/* Create Button - Left positioned */}
-      <Box mb={{ base: 6, md: 8 }} display="flex" justifyContent="flex-start" alignItems="center">
+      <Flex
+        align={{ base: 'flex-start', sm: 'center' }}
+        direction={{ base: 'column', sm: 'row' }}
+        justify="space-between"
+        gap={4}
+        mb={{ base: 6, md: 8 }}
+      >
+        <Box>
+          <Heading size="lg" color={headingColor} letterSpacing="-0.02em">
+            My Notes
+          </Heading>
+          <HStack spacing={2} mt={1} color={mutedColor} fontSize="sm">
+            <Text>{notes.length} {notes.length === 1 ? 'note' : 'notes'}</Text>
+            {searchQuery && <Text>· {filteredNotes.length} matching</Text>}
+          </HStack>
+        </Box>
         <Button
           leftIcon={<AddIcon />}
           bg="#4F8CFF"
           color="white"
-          size="lg"
+          size="md"
           onClick={handleCreateNote}
           isLoading={loading}
           borderRadius="xl"
-          px={{ base: 6, md: 8 }}
-          py={{ base: 3, md: 4 }}
+          px={{ base: 5, md: 6 }}
+          py={{ base: 2, md: 3 }}
           fontSize="md"
           fontWeight="semibold"
           _hover={{
@@ -66,9 +82,9 @@ function Notespage({ searchQuery }) {
           transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
           boxShadow="0 4px 16px rgba(80, 112, 255, 0.2)"
         >
-          Create
+          New note
         </Button>
-      </Box>
+      </Flex>
 
       {loading && (
         <Box display="flex" justifyContent="center" alignItems="center" minH="50vh">
@@ -128,7 +144,7 @@ function Notespage({ searchQuery }) {
       )}
       {!loading && !error && filteredNotes.length > 0 && (
         <Grid
-          gap={{ base: 5, md: 7, lg: 8 }}
+          gap={{ base: 4, md: 5, lg: 6 }}
           w="100%"
           margin="auto"
           gridTemplateColumns={{
