@@ -121,12 +121,12 @@ export default function NoteEditor({
     const isEdit = mode === 'edit';
     const safeBody = typeof body === 'string' ? body : '';
     const safeTags = Array.isArray(tags) ? tags : [];
-    const pageBackground = useColorModeValue('#f7f9fc', '#171d2a');
-    const canvasBackground = useColorModeValue('#ffffff', '#202938');
+    const pageBackground = useColorModeValue('#f1f3f4', '#202124');
+    const canvasBackground = useColorModeValue('#ffffff', '#292a2d');
     const titleColor = useColorModeValue('#1f2937', '#f7fafc');
     const mutedColor = useColorModeValue('#718096', '#a0aec0');
-    const editorBackground = useColorModeValue('#fffdf8', '#252f3f');
-    const toolbarBackground = useColorModeValue('#faf8f2', '#2d3748');
+    const editorBackground = useColorModeValue('#ffffff', '#292a2d');
+    const toolbarBackground = useColorModeValue('#f8f9fa', '#303134');
     const borderColor = useColorModeValue('#e8edf3', '#3d4a5f');
     const toolbarColor = useColorModeValue('#596579', '#cbd5e0');
     const [newTag, setNewTag] = React.useState('');
@@ -149,13 +149,13 @@ export default function NoteEditor({
         : 'Not saved yet';
 
     return (
-        <Box bg={pageBackground} minH="calc(100vh - 64px)" py={{ base: 3, md: 5 }}>
-            <Container maxW="5xl">
+        <Box bg={pageBackground} minH="calc(100vh - 64px)" py={{ base: 2, md: 4 }}>
+            <Container maxW="6xl">
                 <Flex
                     align="center"
                     justify="space-between"
                     gap={3}
-                    mb={{ base: 3, md: 4 }}
+                    mb={{ base: 2, md: 3 }}
                 >
                     <HStack spacing={3} minW={0}>
                         <Button
@@ -169,8 +169,8 @@ export default function NoteEditor({
                             <Box display={{ base: 'none', sm: 'block' }}>Back to Notes</Box>
                             <Box display={{ base: 'block', sm: 'none' }}>Back</Box>
                         </Button>
-                        <Heading size={{ base: 'md', md: 'lg' }} color={titleColor} fontWeight="700" noOfLines={1}>
-                            {isEdit ? 'Edit note' : 'New note'}
+                        <Heading size={{ base: 'sm', md: 'md' }} color={titleColor} fontWeight="600" noOfLines={1}>
+                            {isEdit ? 'Edit note' : 'New document'}
                         </Heading>
                     </HStack>
                     <HStack spacing={{ base: 2, md: 3 }} flexShrink={0}>
@@ -196,16 +196,16 @@ export default function NoteEditor({
                     bg={canvasBackground}
                     border="1px solid"
                     borderColor={borderColor}
-                    borderRadius={{ base: 'lg', md: 'xl' }}
-                    boxShadow="0 8px 30px rgba(31, 41, 55, 0.07)"
+                    borderRadius="sm"
+                    boxShadow="0 1px 3px rgba(60, 64, 67, 0.25)"
                     overflow="hidden"
                 >
-                    <Box px={{ base: 4, md: 8 }} pt={{ base: 5, md: 7 }}>
+                    <Box px={{ base: 5, md: 16 }} pt={{ base: 5, md: 8 }}>
                         <Input
                             aria-label="Note title"
                             value={title}
                             onChange={(event) => onTitleChange(event.target.value)}
-                            placeholder="Untitled note"
+                            placeholder="Untitled document"
                             variant="unstyled"
                             color={titleColor}
                             fontSize={{ base: '2xl', md: '3xl' }}
@@ -216,7 +216,7 @@ export default function NoteEditor({
                     </Box>
 
                     <Box
-                        mx={{ base: 5, md: 10 }}
+                        mx={{ base: 0, md: 8 }}
                         mt={3}
                         mb={0}
                         bg={editorBackground}
@@ -245,15 +245,19 @@ export default function NoteEditor({
                             '.ql-container': {
                                 border: 'none',
                                 background: editorBackground,
-                                height: { base: 'calc(100vh - 390px)', md: 'calc(100vh - 330px)' },
-                                minHeight: '240px',
-                                maxHeight: '520px',
+                                height: isEdit
+                                    ? { base: 'calc(100vh - 355px)', md: 'calc(100vh - 310px)' }
+                                    : { base: '260px', md: '320px' },
+                                minHeight: isEdit ? '240px' : '220px',
+                                maxHeight: isEdit ? '520px' : '360px',
                                 fontSize: { base: '1rem', md: '1.08rem' }
                             },
                             '.ql-editor': {
-                                height: { base: 'calc(100vh - 390px)', md: 'calc(100vh - 330px)' },
-                                minHeight: '240px',
-                                maxHeight: '520px',
+                                height: isEdit
+                                    ? { base: 'calc(100vh - 355px)', md: 'calc(100vh - 310px)' }
+                                    : { base: '260px', md: '320px' },
+                                minHeight: isEdit ? '240px' : '220px',
+                                maxHeight: isEdit ? '520px' : '360px',
                                 padding: { base: '22px 18px', md: '28px 24px' },
                                 color: titleColor
                             },
@@ -277,7 +281,7 @@ export default function NoteEditor({
                     <SimpleGrid
                         columns={{ base: 1, md: 2 }}
                         gap={{ base: 3, md: 6 }}
-                        px={{ base: 4, md: 8 }}
+                        px={{ base: 5, md: 16 }}
                         py={3}
                     >
                         <Box>
@@ -313,16 +317,16 @@ export default function NoteEditor({
                                 </Button>
                             </HStack>
                         </Box>
-                        <Box color={mutedColor} fontSize="sm" textAlign={{ base: 'left', md: 'right' }}>
+                        {isEdit && <Box color={mutedColor} fontSize="sm" textAlign={{ base: 'left', md: 'right' }}>
                             <Text color={titleColor} fontWeight="600" mb={1}>Details</Text>
                             <Text>Created {formatDate(createdAt)} · Updated {formatDate(updatedAt)}</Text>
-                        </Box>
+                        </Box>}
                     </SimpleGrid>
 
                     <Flex
                         align="center"
                         justify="space-between"
-                        px={{ base: 4, md: 8 }}
+                        px={{ base: 5, md: 16 }}
                         py={2}
                         color={mutedColor}
                         fontSize="sm"
