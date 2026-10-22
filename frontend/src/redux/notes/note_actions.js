@@ -91,7 +91,7 @@ export const createNotes = (obj)=>async(dispatch)=>{
                 progress: undefined,
             });
             dispatch({type: CREATE_NOTES_SUCCESS})
-            dispatch(getNotes({ silent: options.silent }))
+            dispatch(getNotes())
         } else if(status === 2) {
             handleTokenError(dispatch);
         } else {
