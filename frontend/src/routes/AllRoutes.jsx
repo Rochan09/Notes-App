@@ -6,6 +6,7 @@ import Loginpage from "../pages/Loginpage";
 import Notespage from "../pages/Notespage";
 import CreateNotePage from "../pages/CreateNotePage";
 import EditNotePage from "../pages/EditNotePage";
+import CalendarPage from "../pages/CalendarPage";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
@@ -17,5 +18,6 @@ export default function AllRoutes({ searchQuery }){
         <Route path="/notes" element={<PrivateRoute><Notespage searchQuery={searchQuery} /></PrivateRoute>}></Route>
         <Route path="/notes/create" element={<PrivateRoute><CreateNotePage /></PrivateRoute>}></Route>
         <Route path="/notes/edit/:id" element={<PrivateRoute><EditNotePage /></PrivateRoute>}></Route>
+        <Route path="/calendar" element={<PrivateRoute><CalendarPage /></PrivateRoute>}></Route>
     </Routes>
 }

@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, SearchIcon } from '@chakra-ui/icons';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
-import { FaHome, FaRegStickyNote } from 'react-icons/fa';
+import { FaCalendarAlt, FaHome } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOGOUT } from '../../../redux/users/user_types';
 import { toast } from 'react-toastify';
@@ -181,6 +181,18 @@ export default function Navbar({ onSearch }) {
               />
             </InputGroup>
           )}
+          {auth && (
+            <NavLink
+              to="/calendar"
+              aria-label="Open calendar"
+              style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5em' }}
+              className={({ isActive }) => `flex items-center px-3 py-2 rounded-xl font-semibold transition-all duration-300 text-sm ${
+                isActive ? 'bg-blue-500/20 text-blue-600' : colorMode === 'dark' ? 'text-gray-200 hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              <FaCalendarAlt /> Calendar
+            </NavLink>
+          )}
           <Stack alignItems = {"center"} direction={'row'} spacing={5}>
             {!auth && (
               <NavLink
@@ -199,21 +211,6 @@ export default function Navbar({ onSearch }) {
                 <FaHome style={{ fontSize: 20, marginRight: '0.4em', filter: 'drop-shadow(0 0 6px currentColor)' }} /> Home
               </NavLink>
             )}
-            <NavLink
-              to="/notes"
-              style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.6em', position: 'relative' }}
-              className={({ isActive }) => {
-                const isDark = colorMode === 'dark';
-                return `flex items-center px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 text-base nav-card ` +
-                  (isActive
-                    ? 'bg-gradient-to-r from-green-500/20 to-emerald-600/20 text-emerald-600 shadow-lg border border-emerald-500/30 backdrop-blur-md'
-                    : isDark
-                      ? 'text-gray-200 hover:bg-emerald-500/20 hover:text-emerald-300 hover:shadow-md hover:border hover:border-emerald-400/30'
-                      : 'text-gray-700 hover:bg-emerald-50/80 hover:text-emerald-700 hover:shadow-md hover:border hover:border-emerald-300/50');
-              }}
-            >
-              <FaRegStickyNote style={{ fontSize: 20, marginRight: '0.4em', filter: 'drop-shadow(0 0 6px currentColor)' }} /> Notes
-            </NavLink>
             <Button 
               bg={colorMode === 'dark' ? 'rgba(251, 146, 60, 0.2)' : 'rgba(249, 115, 22, 0.15)'}
               backdropFilter="blur(10px)"
@@ -402,34 +399,6 @@ export default function Navbar({ onSearch }) {
                     <Text fontSize="md" mr={3}>🏠</Text> Home
                   </Box>
                 )}
-                
-                <Box
-                  as={NavLink}
-                  to="/notes"
-                  onClick={onDrawerClose}
-                  style={({ isActive }) => ({
-                    background: isActive ? (colorMode === 'dark' ? 'rgba(124,131,255,0.16)' : '#eff6ff') : 'transparent',
-                    color: isActive ? (colorMode === 'dark' ? '#c7d2fe' : '#2563eb') : undefined
-                  })}
-                  display="flex"
-                  alignItems="center"
-                  px={3}
-                  py={2.5}
-                  borderRadius="lg"
-                  fontSize="sm"
-                  fontWeight="medium"
-                  color={colorMode === 'dark' ? 'gray.200' : 'gray.700'}
-                  bg="transparent"
-                  _hover={{
-                    bg: colorMode === 'dark' ? 'blue.500/20' : 'blue.50',
-                    color: colorMode === 'dark' ? 'blue.300' : 'blue.600',
-                    boxShadow: 'sm'
-                  }}
-                  transition="all 0.2s"
-                  cursor="pointer"
-                >
-                  <Text fontSize="md" mr={3}>📝</Text> Notes
-                </Box>
                 
                 {auth && (
                   <Box

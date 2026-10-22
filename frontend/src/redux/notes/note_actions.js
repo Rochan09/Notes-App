@@ -37,7 +37,7 @@ export const getNotes = (options = {})=>async(dispatch)=>{
     const {token} = store.getState().userReducer
     if (!token) {
         handleTokenError(dispatch);
-        return;
+        return false;
     }
     
     if (!options.silent) {
@@ -53,13 +53,17 @@ export const getNotes = (options = {})=>async(dispatch)=>{
         const {status, message, data} = res.data
         if(status === 1) {
             dispatch({type: GET_NOTES_SUCCESS, payload: data})
+            return true;
         } else if(status === 2) {
             handleTokenError(dispatch);
+            return false;
         } else {
             handleError({response: {data: {message}}}, dispatch, GET_NOTES_ERROR, "Failed to fetch notes");
+            return false;
         }
     } catch (error) {
         handleError(error, dispatch, GET_NOTES_ERROR, "Failed to fetch notes. Please try again.");
+        return false;
     }
 }
 
@@ -104,6 +108,7 @@ export const createNotes = (obj)=>async(dispatch)=>{
 
 export const updateNotes = (id, obj, options = {})=>async(dispatch)=>{
     const {token} = store.getState().userReducer
+    const previousNote = store.getState().noteReducer.data.find((note) => note._id === id)
     if (!token) {
         handleTokenError(dispatch);
         return false;
@@ -139,6 +144,14 @@ export const updateNotes = (id, obj, options = {})=>async(dispatch)=>{
                     type: UPDATE_NOTE_LOCAL,
                     payload: { id, changes: obj }
                 })
+                const didRefresh = await dispatch(getNotes({ silent: true }))
+                if (!didRefresh) {
+                    dispatch({
+                        type: UPDATE_NOTE_LOCAL,
+                        payload: { id, changes: previousNote || {} }
+                    })
+                    return false;
+                }
             } else {
                 dispatch({type: UPDATE_NOTES_SUCCESS})
                 dispatch(getNotes())

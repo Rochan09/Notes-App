@@ -5,6 +5,16 @@ const { authenticator } = require("../middleware/auth")
 const noteRouter = express.Router()
 noteRouter.use(authenticator)
 
+const parseBoolean = (value) => {
+    if (typeof value === "boolean") {
+        return value
+    }
+    if (typeof value === "string") {
+        return value.toLowerCase() === "true"
+    }
+    return Boolean(value)
+}
+
 noteRouter.get("/", async(req, res)=>{
     try {
         const data = await NoteModel.find({user: req.user.id})
@@ -28,7 +38,7 @@ noteRouter.post("/create", async(req, res)=>{
             title,
             body,
             ...(Array.isArray(tags) ? { tags } : {}),
-            ...(pinned !== undefined ? { pinned: Boolean(pinned) } : {}),
+            ...(pinned !== undefined ? { pinned: parseBoolean(pinned) } : {}),
             user: req.user.id
         })
         await note.save()
@@ -52,7 +62,7 @@ noteRouter.patch("/", async(req, res)=>{
             ...(title !== undefined ? { title } : {}),
             ...(body !== undefined ? { body } : {}),
             ...(Array.isArray(tags) ? { tags } : {}),
-            ...(pinned !== undefined ? { pinned: Boolean(pinned) } : {}),
+            ...(pinned !== undefined ? { pinned: parseBoolean(pinned) } : {}),
             updatedAt: new Date()
         }
         const note = await NoteModel.findOneAndUpdate(

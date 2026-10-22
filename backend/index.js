@@ -3,6 +3,7 @@ const cors = require("cors")
 const { connection } = require("./db")
 const { userRouter } = require("./routes/user_routes")
 const { noteRouter } = require("./routes/note_routes")
+const { reminderRouter } = require("./routes/reminder_routes")
 require("dotenv").config()
 if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET must be set in backend/.env")
@@ -13,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use("/user", userRouter)
 app.use("/note", noteRouter)
+app.use("/reminder", reminderRouter)
 // Forgot password route
 const { UserModel } = require("./models/UserModel");
 app.post("/api/forgot-password", async (req, res) => {
