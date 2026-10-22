@@ -1,16 +1,15 @@
-import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel, Tooltip, InputGroup, InputLeftElement, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useColorModeValue, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, Grid, Text } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NoteCard from "../components/Notes/NoteCard/NoteCard";
-import { getNotes, updateNotes, deleteNotes, createNotes } from "../redux/notes/note_actions";
+import { getNotes } from "../redux/notes/note_actions";
 
 function Notespage({ searchQuery }) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { colorMode } = useColorMode();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 

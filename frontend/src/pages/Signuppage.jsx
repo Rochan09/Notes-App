@@ -59,7 +59,7 @@ export default function Signuppage() {
             setStatusIndex(0);
         }
         return () => clearInterval(interval);
-    }, [loading, error]);
+    }, [loading, error, statusMessages.length]);
 
     // All useColorModeValue hooks must be called at the top level
     const particleBg = useColorModeValue('rgba(79, 140, 255, 0.3)', 'rgba(79, 140, 255, 0.5)');

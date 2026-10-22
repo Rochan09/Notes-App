@@ -19,7 +19,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  DrawerHeader,
   DrawerBody,
   Divider,
   useDisclosure,
@@ -128,7 +127,6 @@ export default function Navbar({ onSearch }) {
             aria-label={isDrawerOpen ? 'Close navigation menu' : 'Open navigation menu'}
             icon={<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>}
             onClick={isDrawerOpen ? onDrawerClose : onDrawerOpen}
-            aria-label="Open menu"
             p={2}
             variant="ghost"
             borderRadius="12px"
