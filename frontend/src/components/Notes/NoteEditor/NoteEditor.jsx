@@ -119,6 +119,8 @@ export default function NoteEditor({
     mode = 'create'
 }) {
     const isEdit = mode === 'edit';
+    const safeBody = typeof body === 'string' ? body : '';
+    const safeTags = Array.isArray(tags) ? tags : [];
     const pageBackground = useColorModeValue('#f7f9fc', '#171d2a');
     const canvasBackground = useColorModeValue('#ffffff', '#202938');
     const titleColor = useColorModeValue('#1f2937', '#f7fafc');
@@ -129,15 +131,15 @@ export default function NoteEditor({
     const toolbarColor = useColorModeValue('#596579', '#cbd5e0');
     const [newTag, setNewTag] = React.useState('');
 
-    const wordCount = body
+    const wordCount = safeBody
         .replace(/<[^>]*>/g, ' ')
         .split(/\s+/)
         .filter(Boolean).length;
 
     const addTag = () => {
         const trimmedTag = newTag.trim();
-        if (trimmedTag && !tags.includes(trimmedTag)) {
-            onTagsChange([...tags, trimmedTag]);
+        if (trimmedTag && !safeTags.includes(trimmedTag)) {
+            onTagsChange([...safeTags, trimmedTag]);
             setNewTag('');
         }
     };
@@ -231,7 +233,7 @@ export default function NoteEditor({
                     >
                         <NoteToolbar toolbarColor={toolbarColor} borderColor={borderColor} />
                         <ReactQuill
-                            value={body}
+                            value={safeBody}
                             onChange={onBodyChange}
                             modules={{ toolbar: '#note-editor-toolbar' }}
                             theme="snow"
@@ -250,13 +252,13 @@ export default function NoteEditor({
                                 Tags
                             </Text>
                             <HStack wrap="wrap" spacing={2} mb={2}>
-                                {tags.map((tag) => (
+                                {safeTags.map((tag) => (
                                     <Tag key={tag} size="sm" borderRadius="full" colorScheme="blue">
                                         <TagLabel>{tag}</TagLabel>
-                                        <TagCloseButton onClick={() => onTagsChange(tags.filter((item) => item !== tag))} />
+                                        <TagCloseButton onClick={() => onTagsChange(safeTags.filter((item) => item !== tag))} />
                                     </Tag>
                                 ))}
-                                {!tags.length && (
+                                {!safeTags.length && (
                                     <Text color={mutedColor} fontSize="sm">No tags yet</Text>
                                 )}
                             </HStack>
@@ -296,7 +298,7 @@ export default function NoteEditor({
                         fontSize="sm"
                     >
                         <Text>{isEdit ? 'Edit freely. Your changes are ready to save.' : 'Capture your thoughts in one place.'}</Text>
-                        <Text>{body.length} characters · {wordCount} words</Text>
+                        <Text>{safeBody.length} characters · {wordCount} words</Text>
                     </Flex>
 
                     <Flex

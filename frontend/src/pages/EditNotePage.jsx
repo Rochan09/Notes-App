@@ -12,7 +12,7 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNotes } from '../redux/notes/note_actions';
+import { getNotes, updateNotes } from '../redux/notes/note_actions';
 import { toast } from 'react-toastify';
 import NoteEditor from '../components/Notes/NoteEditor/NoteEditor';
 
@@ -24,31 +24,41 @@ export default function EditNotePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [saveStatus, setSaveStatus] = useState('idle');
     const hasLoadedNote = useRef(false);
+    const hasRequestedNotes = useRef(false);
     const draftRef = useRef({ title: '', body: '', tags: [] });
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { id } = useParams();
-    const { loading, data: notes } = useSelector((state) => state.noteReducer);
+    const { loading, data: notes = [] } = useSelector((state) => state.noteReducer);
     const pageBackground = useColorModeValue('#f7f9fc', '#171d2a');
     const mutedColor = useColorModeValue('#718096', '#a0aec0');
 
     useEffect(() => {
-        if (notes && notes.length > 0) {
-            const noteToEdit = notes.find((note) => note._id === id);
-            if (noteToEdit) {
-                setTitle(noteToEdit.title);
-                setBody(noteToEdit.body);
-                setTags(noteToEdit.tags || []);
-                draftRef.current = { title: noteToEdit.title, body: noteToEdit.body, tags: noteToEdit.tags || [] };
-                setNoteFound(true);
-                hasLoadedNote.current = true;
-                setSaveStatus('saved');
-            } else {
-                setNoteFound(false);
+        if (!notes.length) {
+            if (!hasRequestedNotes.current) {
+                hasRequestedNotes.current = true;
+                dispatch(getNotes());
             }
-            setIsLoading(false);
+            return;
         }
-    }, [id, notes]);
+
+        const noteToEdit = notes.find((note) => note._id === id);
+        if (noteToEdit) {
+            const noteTitle = typeof noteToEdit.title === 'string' ? noteToEdit.title : '';
+            const noteBody = typeof noteToEdit.body === 'string' ? noteToEdit.body : '';
+            const noteTags = Array.isArray(noteToEdit.tags) ? noteToEdit.tags : [];
+            setTitle(noteTitle);
+            setBody(noteBody);
+            setTags(noteTags);
+            draftRef.current = { title: noteTitle, body: noteBody, tags: noteTags };
+            setNoteFound(true);
+            hasLoadedNote.current = true;
+            setSaveStatus('saved');
+        } else {
+            setNoteFound(false);
+        }
+        setIsLoading(false);
+    }, [dispatch, id, notes]);
 
     useEffect(() => {
         draftRef.current = { title, body, tags };
