@@ -149,18 +149,47 @@ export default function NoteEditor({
         : 'Not saved yet';
 
     return (
-        <Box bg={pageBackground} minH="100vh" py={{ base: 4, md: 8 }}>
+        <Box bg={pageBackground} minH="calc(100vh - 64px)" py={{ base: 3, md: 5 }}>
             <Container maxW="5xl">
                 <Flex
-                    align={{ base: 'flex-start', md: 'center' }}
-                    direction={{ base: 'column', md: 'row' }}
+                    align="center"
                     justify="space-between"
-                    gap={4}
-                    mb={5}
+                    gap={3}
+                    mb={{ base: 3, md: 4 }}
                 >
-                    <Heading size="lg" color={titleColor} fontWeight="700">
-                        {isEdit ? 'Edit note' : 'New note'}
-                    </Heading>
+                    <HStack spacing={3} minW={0}>
+                        <Button
+                            leftIcon={<ArrowBackIcon />}
+                            variant="ghost"
+                            onClick={onCancel}
+                            size="sm"
+                            color={mutedColor}
+                            flexShrink={0}
+                        >
+                            <Box display={{ base: 'none', sm: 'block' }}>Back to Notes</Box>
+                            <Box display={{ base: 'block', sm: 'none' }}>Back</Box>
+                        </Button>
+                        <Heading size={{ base: 'md', md: 'lg' }} color={titleColor} fontWeight="700" noOfLines={1}>
+                            {isEdit ? 'Edit note' : 'New note'}
+                        </Heading>
+                    </HStack>
+                    <HStack spacing={{ base: 2, md: 3 }} flexShrink={0}>
+                        {isEdit && saveStatus !== 'idle' && (
+                            <Text color={mutedColor} fontSize="sm" display={{ base: 'none', sm: 'block' }}>
+                                {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'}
+                            </Text>
+                        )}
+                        <Button
+                            leftIcon={<FaSave />}
+                            colorScheme="blue"
+                            onClick={onSubmit}
+                            isLoading={isLoading}
+                            loadingText={isEdit ? 'Saving...' : 'Creating...'}
+                            size="sm"
+                        >
+                            {isEdit ? 'Save changes' : 'Save note'}
+                        </Button>
+                    </HStack>
                 </Flex>
 
                 <Box
@@ -171,7 +200,7 @@ export default function NoteEditor({
                     boxShadow="0 8px 30px rgba(31, 41, 55, 0.07)"
                     overflow="hidden"
                 >
-                    <Box px={{ base: 5, md: 10 }} pt={{ base: 7, md: 10 }}>
+                    <Box px={{ base: 4, md: 8 }} pt={{ base: 5, md: 7 }}>
                         <Input
                             aria-label="Note title"
                             value={title}
@@ -188,7 +217,7 @@ export default function NoteEditor({
 
                     <Box
                         mx={{ base: 5, md: 10 }}
-                        mt={5}
+                        mt={3}
                         mb={0}
                         bg={editorBackground}
                         border="1px solid"
@@ -216,11 +245,15 @@ export default function NoteEditor({
                             '.ql-container': {
                                 border: 'none',
                                 background: editorBackground,
-                                minHeight: { base: '300px', md: '400px' },
+                                height: { base: 'calc(100vh - 390px)', md: 'calc(100vh - 330px)' },
+                                minHeight: '240px',
+                                maxHeight: '520px',
                                 fontSize: { base: '1rem', md: '1.08rem' }
                             },
                             '.ql-editor': {
-                                minHeight: { base: '300px', md: '400px' },
+                                height: { base: 'calc(100vh - 390px)', md: 'calc(100vh - 330px)' },
+                                minHeight: '240px',
+                                maxHeight: '520px',
                                 padding: { base: '22px 18px', md: '28px 24px' },
                                 color: titleColor
                             },
@@ -243,15 +276,15 @@ export default function NoteEditor({
 
                     <SimpleGrid
                         columns={{ base: 1, md: 2 }}
-                        gap={4}
-                        px={{ base: 5, md: 10 }}
-                        py={5}
+                        gap={{ base: 3, md: 6 }}
+                        px={{ base: 4, md: 8 }}
+                        py={3}
                     >
                         <Box>
-                            <Text color={mutedColor} fontSize="xs" fontWeight="700" letterSpacing="0.08em" textTransform="uppercase" mb={2}>
-                                Tags
-                            </Text>
-                            <HStack wrap="wrap" spacing={2} mb={2}>
+                            <HStack wrap="wrap" spacing={2}>
+                                <Text color={mutedColor} fontSize="xs" fontWeight="700" textTransform="uppercase">
+                                    Tags
+                                </Text>
                                 {safeTags.map((tag) => (
                                     <Tag key={tag} size="sm" borderRadius="full" colorScheme="blue">
                                         <TagLabel>{tag}</TagLabel>
@@ -259,10 +292,8 @@ export default function NoteEditor({
                                     </Tag>
                                 ))}
                                 {!safeTags.length && (
-                                    <Text color={mutedColor} fontSize="sm">No tags yet</Text>
+                                    <Text color={mutedColor} fontSize="sm">None</Text>
                                 )}
-                            </HStack>
-                            <HStack>
                                 <Input
                                     aria-label="New tag"
                                     value={newTag}
@@ -275,75 +306,33 @@ export default function NoteEditor({
                                     }}
                                     placeholder="Add a tag"
                                     size="sm"
-                                    maxW="220px"
+                                    maxW="150px"
                                 />
                                 <Button size="sm" variant="outline" onClick={addTag} isDisabled={!newTag.trim()}>
-                                    Add
+                                    + Add
                                 </Button>
                             </HStack>
                         </Box>
                         <Box color={mutedColor} fontSize="sm" textAlign={{ base: 'left', md: 'right' }}>
-                            <Text color={titleColor} fontWeight="600" mb={1}>Note details</Text>
-                            <Text>Created {formatDate(createdAt)}</Text>
-                            <Text>Updated {formatDate(updatedAt)}</Text>
+                            <Text color={titleColor} fontWeight="600" mb={1}>Details</Text>
+                            <Text>Created {formatDate(createdAt)} · Updated {formatDate(updatedAt)}</Text>
                         </Box>
                     </SimpleGrid>
 
                     <Flex
                         align="center"
                         justify="space-between"
-                        px={{ base: 5, md: 10 }}
-                        py={4}
+                        px={{ base: 4, md: 8 }}
+                        py={2}
                         color={mutedColor}
                         fontSize="sm"
                     >
-                        <Text>{isEdit ? 'Edit freely. Your changes are ready to save.' : 'Capture your thoughts in one place.'}</Text>
                         <Text>{safeBody.length} characters · {wordCount} words</Text>
-                    </Flex>
-
-                    <Flex
-                        position="sticky"
-                        bottom={0}
-                        zIndex={1}
-                        align={{ base: 'stretch', md: 'center' }}
-                        justify="space-between"
-                        direction={{ base: 'column-reverse', md: 'row' }}
-                        gap={3}
-                        px={{ base: 5, md: 10 }}
-                        py={4}
-                        bg={canvasBackground}
-                        borderTop="1px solid"
-                        borderColor={borderColor}
-                        boxShadow="0 -8px 20px rgba(31, 41, 55, 0.05)"
-                    >
-                        <HStack spacing={3} color={mutedColor} fontSize="sm">
-                            {isEdit && saveStatus !== 'idle' && (
-                                <Text>
-                                    {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'}
-                                </Text>
-                            )}
-                        </HStack>
-                        <HStack spacing={3} justify={{ base: 'stretch', md: 'flex-end' }}>
-                            <Button
-                                leftIcon={<ArrowBackIcon />}
-                                variant="ghost"
-                                onClick={onCancel}
-                                size="md"
-                                color={mutedColor}
-                            >
-                                Back to Notes
-                            </Button>
-                            <Button
-                                leftIcon={<FaSave />}
-                                colorScheme="blue"
-                                onClick={onSubmit}
-                                isLoading={isLoading}
-                                loadingText={isEdit ? 'Saving...' : 'Creating...'}
-                                size="md"
-                            >
-                                {isEdit ? 'Save changes' : 'Save note'}
-                            </Button>
-                        </HStack>
+                        <Text display={{ base: 'none', sm: 'block' }}>
+                            {isEdit && saveStatus !== 'idle'
+                                ? saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'
+                                : 'Ready to write'}
+                        </Text>
                     </Flex>
                 </Box>
             </Container>
