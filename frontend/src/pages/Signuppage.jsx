@@ -22,15 +22,14 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../redux/users/user_actions';
 
-const statusMessages = [
-    { emoji: '👨‍💼', text: 'Creating your secure account...' },
-    { emoji: '🔐', text: 'Encrypting your data...' },
-    { emoji: '🛡️', text: 'Setting up security protocols...' },
-    { emoji: '✅', text: 'Welcome aboard!' }
-];
-
 export default function Signuppage() {
     const toast = useToast();
+    const statusMessages = [
+        { emoji: '👨‍💼', text: 'Creating your secure account...' },
+        { emoji: '🔐', text: 'Encrypting your data...' },
+        { emoji: '🛡️', text: 'Setting up security protocols...' },
+        { emoji: '✅', text: 'Welcome aboard!' }
+    ];
 
     useEffect(() => {
         const original = document.body.style.overflow;

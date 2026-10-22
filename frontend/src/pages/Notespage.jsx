@@ -1,15 +1,16 @@
-import { Box, Button, Grid, Text } from "@chakra-ui/react";
+import { Box, Button, Grid, IconButton, Input, Textarea, useDisclosure, Spinner, Text, FormControl, FormLabel, Tooltip, InputGroup, InputLeftElement, useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useColorModeValue, SimpleGrid } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NoteCard from "../components/Notes/NoteCard/NoteCard";
-import { getNotes } from "../redux/notes/note_actions";
+import { getNotes, updateNotes, deleteNotes, createNotes } from "../redux/notes/note_actions";
 
 function Notespage({ searchQuery }) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { colorMode } = useColorMode();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,9 +37,16 @@ function Notespage({ searchQuery }) {
   };
 
   return (
-    <Box mt={{ base: 4, md: 8 }} px={{ base: 3, sm: 5, md: 8 }} pb={{ base: 6, md: 8 }}>
+    <Box
+      className="notes-page"
+      minH="calc(100vh - 64px)"
+      mt={0}
+      px={{ base: 4, sm: 6, md: 8, xl: 10 }}
+      pt={{ base: 5, md: 8 }}
+      pb={{ base: 8, md: 12 }}
+    >
       {/* Create Button - Left positioned */}
-      <Box mb={{ base: 4, md: 6 }} display="flex" justifyContent="flex-start" alignItems="center">
+      <Box mb={{ base: 6, md: 8 }} display="flex" justifyContent="flex-start" alignItems="center">
         <Button
           leftIcon={<AddIcon />}
           bg="#4F8CFF"
@@ -121,7 +129,7 @@ function Notespage({ searchQuery }) {
       )}
       {!loading && !error && filteredNotes.length > 0 && (
         <Grid
-          gap={{ base: 4, md: 6, lg: 8 }}
+          gap={{ base: 5, md: 7, lg: 8 }}
           w="100%"
           margin="auto"
           gridTemplateColumns={{
