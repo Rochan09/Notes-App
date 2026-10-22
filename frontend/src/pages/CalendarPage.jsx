@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaCalendarAlt, FaTrashAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { API_BASE_URL } from "../constants/config";
@@ -79,7 +79,7 @@ function CalendarPage() {
   const today = formatDate(new Date());
   const days = useMemo(() => getMonthDays(month), [month]);
 
-  const loadReminders = async () => {
+  const loadReminders = useCallback(async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/reminder`, {
         headers: { Authorization: token },
@@ -94,11 +94,11 @@ function CalendarPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, toast]);
 
   useEffect(() => {
     loadReminders();
-  }, [token]);
+  }, [loadReminders]);
 
   const selectedReminders = reminders.filter((reminder) => reminder.date === selectedDate);
   const selectedSpecialDay = specialDays[selectedDate.slice(5)];
