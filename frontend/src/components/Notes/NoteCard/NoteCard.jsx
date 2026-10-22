@@ -1,16 +1,18 @@
 
 import { Button, Box, Text, Badge, HStack, VStack, IconButton, AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, useDisclosure, useColorModeValue } from "@chakra-ui/react";
-import { FaTrashAlt, FaEdit } from "react-icons/fa";
-import { useRef } from "react";
+import { FaTrashAlt, FaEdit, FaThumbtack } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteNotes } from "../../../redux/notes/note_actions";
+import { deleteNotes, updateNotes } from "../../../redux/notes/note_actions";
 import { useNavigate } from 'react-router-dom';
 
 
-export default function NoteCard({title, body, user, _id, createdAt, updatedAt, important, noteNumber}) {
+export default function NoteCard({title, body, user, _id, createdAt, updatedAt, important, pinned, noteNumber}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { loading } = useSelector((state) => state.noteReducer);
+    const [isPinned, setIsPinned] = useState(Boolean(pinned));
+    const [isPinning, setIsPinning] = useState(false);
     const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
     const cancelRef = useRef();
 
@@ -22,6 +24,23 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
         dispatch(deleteNotes(_id));
         onDeleteClose();
     };
+
+    const handlePin = () => {
+        const nextPinned = !isPinned;
+        setIsPinned(nextPinned);
+        setIsPinning(true);
+        dispatch(updateNotes(_id, { pinned: nextPinned }, { silent: true }))
+            .then((didSave) => {
+                if (!didSave) {
+                    setIsPinned(!nextPinned);
+                }
+            })
+            .finally(() => setIsPinning(false));
+    };
+
+    useEffect(() => {
+        setIsPinned(Boolean(pinned));
+    }, [pinned]);
 
     // Format timestamp function
     const formatTimestamp = (timestamp) => {
@@ -79,15 +98,15 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
 
     const displayInfo = getDisplayTimestamp();
 
-    const cardBg = useColorModeValue('white', 'rgba(30, 41, 59, 0.95)');
-    const cardBorder = useColorModeValue('1.5px solid #e2e8f0', '1.5px solid rgba(99, 179, 237, 0.25)');
-    const cardShadow = useColorModeValue('0 2px 8px rgba(0,0,0,0.08)', '0 12px 40px 0 rgba(0, 0, 0, 0.3), 0 4px 15px 0 rgba(99, 179, 237, 0.15)');
+    const cardBg = useColorModeValue('white', 'rgba(24, 36, 56, 0.94)');
+    const cardBorder = useColorModeValue('1.5px solid #e2e8f0', '1px solid rgba(124, 131, 255, 0.34)');
+    const cardShadow = useColorModeValue('0 2px 8px rgba(0,0,0,0.08)', '0 14px 32px rgba(2, 6, 23, 0.28)');
     const textColor = useColorModeValue('gray.700', 'gray.50');
-    const subTextColor = useColorModeValue('gray.500', 'rgba(156, 163, 175, 0.9)');
-    const bodyTextColor = useColorModeValue('gray.600', 'rgba(209, 213, 219, 0.95)');
-    const hoverBg = useColorModeValue('gray.50', 'rgba(30, 41, 59, 0.98)');
-    const hoverBorder = useColorModeValue('1.5px solid #cbd5e0', '1.5px solid rgba(99, 179, 237, 0.4)');
-    const hoverShadow = useColorModeValue('0 4px 12px rgba(0,0,0,0.12)', '0 16px 50px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(99, 179, 237, 0.25)');
+    const subTextColor = useColorModeValue('gray.500', '#94a3b8');
+    const bodyTextColor = useColorModeValue('gray.600', '#cbd5e1');
+    const hoverBg = useColorModeValue('gray.50', 'rgba(30, 44, 68, 0.98)');
+    const hoverBorder = useColorModeValue('1.5px solid #cbd5e0', '1px solid rgba(124, 131, 255, 0.72)');
+    const hoverShadow = useColorModeValue('0 4px 12px rgba(0,0,0,0.12)', '0 18px 44px rgba(2, 6, 23, 0.48), 0 0 24px rgba(124, 131, 255, 0.12)');
     
     // Badge colors
     const badgeBg = useColorModeValue('green.100', 'rgba(34, 197, 94, 0.15)');
@@ -149,6 +168,8 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                         </Text>
                     )}
                 </VStack>
+                <HStack spacing={2}>
+                {isPinned && <Badge colorScheme="purple" borderRadius="full">Pinned</Badge>}
                 {important && (
                     <Badge 
                         colorScheme="green" 
@@ -166,6 +187,7 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
                         Important
                     </Badge>
                 )}
+                </HStack>
             </HStack>
             <Text 
                 fontWeight="bold" 
@@ -198,6 +220,19 @@ export default function NoteCard({title, body, user, _id, createdAt, updatedAt, 
             />
             <HStack w="100%" justifyContent="flex-end" alignItems="flex-end" mt="auto">
                 <HStack spacing={3}>
+                    <IconButton
+                        icon={<FaThumbtack />}
+                        size="sm"
+                        aria-label={`${isPinned ? 'Unpin' : 'Pin'} note: ${title}`}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handlePin();
+                        }}
+                        isLoading={isPinning}
+                        color={isPinned ? 'purple.600' : 'gray.400'}
+                        bg={isPinned ? 'purple.50' : 'gray.50'}
+                        borderRadius="lg"
+                    />
                     <IconButton
                         icon={<FaTrashAlt />}
                         size="sm"

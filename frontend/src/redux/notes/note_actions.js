@@ -1,6 +1,6 @@
 import axios from "axios"
 import { store } from "../store"
-import { CREATE_NOTES_ERROR, CREATE_NOTES_LOADING, CREATE_NOTES_SUCCESS, DELETE_NOTES_ERROR, DELETE_NOTES_LOADING, DELETE_NOTES_SUCCESS, GET_NOTES_ERROR, GET_NOTES_LOADING, GET_NOTES_SUCCESS, UPDATE_NOTES_ERROR, UPDATE_NOTES_LOADING, UPDATE_NOTES_SUCCESS } from "./note_types"
+import { CREATE_NOTES_ERROR, CREATE_NOTES_LOADING, CREATE_NOTES_SUCCESS, DELETE_NOTES_ERROR, DELETE_NOTES_LOADING, DELETE_NOTES_SUCCESS, GET_NOTES_ERROR, GET_NOTES_LOADING, GET_NOTES_SUCCESS, UPDATE_NOTE_LOCAL, UPDATE_NOTES_ERROR, UPDATE_NOTES_LOADING, UPDATE_NOTES_SUCCESS } from "./note_types"
 import { API_BASE_URL } from "../../constants/config"
 import { LOGOUT } from "../users/user_types"
 import { toast } from 'react-toastify';
@@ -33,14 +33,16 @@ const handleError = (error, dispatch, actionType, defaultMessage) => {
     dispatch({type: actionType});
 };
 
-export const getNotes = ()=>async(dispatch)=>{
+export const getNotes = (options = {})=>async(dispatch)=>{
     const {token} = store.getState().userReducer
     if (!token) {
         handleTokenError(dispatch);
         return;
     }
     
-    dispatch({type: GET_NOTES_LOADING})
+    if (!options.silent) {
+        dispatch({type: GET_NOTES_LOADING})
+    }
     try {
         const res = await axios(API_BASE_URL+"/note", {
             method: "get",
@@ -89,7 +91,7 @@ export const createNotes = (obj)=>async(dispatch)=>{
                 progress: undefined,
             });
             dispatch({type: CREATE_NOTES_SUCCESS})
-            dispatch(getNotes())
+            dispatch(getNotes({ silent: options.silent }))
         } else if(status === 2) {
             handleTokenError(dispatch);
         } else {
@@ -107,7 +109,9 @@ export const updateNotes = (id, obj, options = {})=>async(dispatch)=>{
         return false;
     }
 
-    dispatch({type: UPDATE_NOTES_LOADING})
+    if (!options.silent) {
+        dispatch({type: UPDATE_NOTES_LOADING})
+    }
     try {
         const res = await axios(API_BASE_URL+"/note/", {
             method: "patch",
@@ -130,8 +134,15 @@ export const updateNotes = (id, obj, options = {})=>async(dispatch)=>{
                     progress: undefined,
                 });
             }
-            dispatch({type: UPDATE_NOTES_SUCCESS})
-            dispatch(getNotes())
+            if (options.silent) {
+                dispatch({
+                    type: UPDATE_NOTE_LOCAL,
+                    payload: { id, changes: obj }
+                })
+            } else {
+                dispatch({type: UPDATE_NOTES_SUCCESS})
+                dispatch(getNotes())
+            }
             return true;
         } else if(status === 2) {
             handleTokenError(dispatch);

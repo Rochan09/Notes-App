@@ -23,11 +23,12 @@ noteRouter.get("/", async(req, res)=>{
 
 noteRouter.post("/create", async(req, res)=>{
     try {
-        const { title, body, tags } = req.body
+        const { title, body, tags, pinned } = req.body
         const note = new NoteModel({
             title,
             body,
             ...(Array.isArray(tags) ? { tags } : {}),
+            ...(pinned !== undefined ? { pinned: Boolean(pinned) } : {}),
             user: req.user.id
         })
         await note.save()
@@ -46,11 +47,12 @@ noteRouter.post("/create", async(req, res)=>{
 noteRouter.patch("/", async(req, res)=>{
     let {id} = req.headers
     try {
-        const { title, body, tags } = req.body
+        const { title, body, tags, pinned } = req.body
         const updateData = {
             ...(title !== undefined ? { title } : {}),
             ...(body !== undefined ? { body } : {}),
             ...(Array.isArray(tags) ? { tags } : {}),
+            ...(pinned !== undefined ? { pinned: Boolean(pinned) } : {}),
             updatedAt: new Date()
         }
         const note = await NoteModel.findOneAndUpdate(

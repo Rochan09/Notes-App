@@ -9,6 +9,7 @@ export const CREATE_NOTES_ERROR = "create/notes/error"
 export const UPDATE_NOTES_LOADING = "update/notes/loading"
 export const UPDATE_NOTES_SUCCESS = "update/notes/success"
 export const UPDATE_NOTES_ERROR = "update/notes/error"
+export const UPDATE_NOTE_LOCAL = "update/note/local"
 
 export const DELETE_NOTES_LOADING = "delete/notes/loading"
 export const DELETE_NOTES_SUCCESS = "delete/notes/success"

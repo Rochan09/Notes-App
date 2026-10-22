@@ -53,15 +53,18 @@ export const registerUser = (obj) => async(dispatch) => {
         {
             showToast(message, 'success');
             dispatch({type: REGISTER_USER_SUCCESS})
+            return true;
         }
         else
         {
             showToast(message, 'error');
             dispatch({type: REGISTER_USER_ERROR})
+            return false;
         }
     } catch (error) {
         const errorMessage = error.response?.data?.message || "An error occurred during signup. Please try again.";
         showToast(errorMessage, 'error');
         dispatch({type: REGISTER_USER_ERROR})
+        return false;
     }
 }

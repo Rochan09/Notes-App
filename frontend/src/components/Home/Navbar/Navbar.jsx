@@ -69,14 +69,14 @@ export default function Navbar({ onSearch }) {
       bg={
         colorMode === 'light'
           ? 'rgba(255, 255, 255, 0.25)'
-          : 'rgba(40, 54, 85, 0.25)'
+          : 'rgba(15, 23, 42, 0.88)'
       }
       backdropFilter="blur(12px)"
       WebkitBackdropFilter="blur(12px)"
       borderBottom={
         colorMode === 'light'
           ? '1px solid rgba(255, 255, 255, 0.18)'
-          : '1px solid rgba(255, 255, 255, 0.1)'
+          : '1px solid rgba(124, 131, 255, 0.18)'
       }
       px={{ base: 2, sm: 4 }}
       style={{ 
@@ -84,7 +84,7 @@ export default function Navbar({ onSearch }) {
         marginBottom: 0,
         background: colorMode === 'light' 
           ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
-          : '#232a3a'
+          : 'linear-gradient(135deg, #151e31 0%, #111827 100%)'
       }}
     >
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
@@ -93,7 +93,7 @@ export default function Navbar({ onSearch }) {
           cursor="pointer" 
           fontSize={{ base: 'lg', sm: 'xl' }} 
           onClick={()=>{nav("/")}}
-          color={colorMode === 'light' ? '#4F8CFF' : '#fff'}
+          color={colorMode === 'light' ? '#4F8CFF' : '#f8fafc'}
           textShadow={colorMode === 'light' ? '0 0 20px rgba(79, 140, 255, 0.3)' : '0 0 20px rgba(255, 255, 255, 0.2)'}
           transition="all 0.3s ease"
           _hover={{
@@ -166,11 +166,11 @@ export default function Navbar({ onSearch }) {
                 pl={10}
                 py={2}
                 borderRadius="lg"
-                bg={colorMode === 'dark' ? 'rgba(40, 54, 85, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
-                color={colorMode === 'dark' ? '#e0e7ff' : '#181f34'}
-                _placeholder={{ color: colorMode === 'dark' ? '#b3d1ff' : '#7b8db0', fontSize: 'sm' }}
+                bg={colorMode === 'dark' ? 'rgba(30, 41, 59, 0.86)' : 'rgba(255, 255, 255, 0.4)'}
+                color={colorMode === 'dark' ? '#f1f5f9' : '#181f34'}
+                _placeholder={{ color: colorMode === 'dark' ? '#94a3b8' : '#7b8db0', fontSize: 'sm' }}
                 boxShadow={colorMode === 'dark' ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(79,140,255,0.1)'}
-                border={colorMode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(79,140,255,0.2)'}
+                border={colorMode === 'dark' ? '1px solid rgba(148,163,184,0.2)' : '1px solid rgba(79,140,255,0.2)'}
                 backdropFilter="blur(10px)"
                 outline="none"
                 transition="all 0.2s"
@@ -342,24 +342,21 @@ export default function Navbar({ onSearch }) {
       </Flex>
       {/* Mobile Nav Drawer */}
       <Drawer placement="right" onClose={onDrawerClose} isOpen={isDrawerOpen} size="xs">
-        <DrawerOverlay />
+        <DrawerOverlay bg="transparent" />
         <DrawerContent
-          bg={colorMode === 'light' ? 'rgba(255,255,255,0.98)' : 'rgba(30,41,59,0.95)'}
+          bg={colorMode === 'light' ? 'white' : '#172238'}
           maxW="240px"
-          maxH="auto"
           h="fit-content"
-          mt="80px"
-          mr="16px"
-          borderRadius="16px"
+          mt="64px"
+          mr={{ base: 3, sm: 4 }}
+          borderRadius="0 0 14px 14px"
           style={{
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
             border: colorMode === 'light' 
-              ? '1px solid rgba(0, 0, 0, 0.1)' 
-              : '1px solid rgba(255,255,255,0.1)',
+              ? '1px solid #e2e8f0' 
+              : '1px solid rgba(148,163,184,0.2)',
             boxShadow: colorMode === 'light'
-              ? '0 10px 25px rgba(0, 0, 0, 0.25)'
-              : '0 10px 25px rgba(0, 0, 0, 0.3)'
+              ? '0 12px 28px rgba(15, 23, 42, 0.14)'
+              : '0 14px 32px rgba(2, 6, 23, 0.45)'
           }}
         >
           <DrawerCloseButton 
@@ -372,43 +369,8 @@ export default function Navbar({ onSearch }) {
               bg: colorMode === 'light' ? 'gray.100' : 'gray.700',
             }}
           />
-          <DrawerBody p={4} pt={8} pb={4}>
-            {/* Mobile Search Bar - Only show when user is logged in */}
-            {auth && (
-              <Box mb={3}>
-                <InputGroup size="sm">
-                  <InputLeftElement pointerEvents="none" height="100%" pl={2}>
-                    <Text fontSize="sm">🔍</Text>
-                  </InputLeftElement>
-                  <Input
-                    type="text"
-                    aria-label="Search notes"
-                    placeholder="Search notes..."
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      onSearch && onSearch(e.target.value);
-                    }}
-                    fontSize="xs"
-                    pl={8}
-                    py={1}
-                    h="32px"
-                    borderRadius="full"
-                    bg={colorMode === 'dark' ? 'rgba(40, 54, 85, 0.4)' : 'rgba(255, 255, 255, 0.9)'}
-                    color={colorMode === 'dark' ? '#e0e7ff' : '#374151'}
-                    _placeholder={{ color: colorMode === 'dark' ? '#b3d1ff' : '#6b7280', fontSize: 'xs' }}
-                    boxShadow="none"
-                    border={colorMode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'}
-                    _focus={{
-                      boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.3)',
-                      borderColor: '#3b82f6'
-                    }}
-                  />
-                </InputGroup>
-              </Box>
-            )}
-            
-            <Stack spacing={2}>
+          <DrawerBody p={3} pt={10} pb={3}>
+            <Stack spacing={1}>
               {/* Navigation Section */}
               <Stack spacing={1}>
                 {!auth && (
@@ -416,6 +378,10 @@ export default function Navbar({ onSearch }) {
                     as={NavLink}
                     to="/"
                     onClick={onDrawerClose}
+                    style={({ isActive }) => ({
+                      background: isActive ? (colorMode === 'dark' ? 'rgba(124,131,255,0.16)' : '#eff6ff') : 'transparent',
+                      color: isActive ? (colorMode === 'dark' ? '#c7d2fe' : '#2563eb') : undefined
+                    })}
                     display="flex"
                     alignItems="center"
                     px={3}
@@ -441,6 +407,10 @@ export default function Navbar({ onSearch }) {
                   as={NavLink}
                   to="/notes"
                   onClick={onDrawerClose}
+                  style={({ isActive }) => ({
+                    background: isActive ? (colorMode === 'dark' ? 'rgba(124,131,255,0.16)' : '#eff6ff') : 'transparent',
+                    color: isActive ? (colorMode === 'dark' ? '#c7d2fe' : '#2563eb') : undefined
+                  })}
                   display="flex"
                   alignItems="center"
                   px={3}
@@ -466,6 +436,10 @@ export default function Navbar({ onSearch }) {
                     as={NavLink}
                     to="/notes/create"
                     onClick={onDrawerClose}
+                    style={({ isActive }) => ({
+                      background: isActive ? (colorMode === 'dark' ? 'rgba(85,214,160,0.16)' : '#ecfdf5') : 'transparent',
+                      color: isActive ? (colorMode === 'dark' ? '#86efac' : '#16a34a') : undefined
+                    })}
                     display="flex"
                     alignItems="center"
                     px={3}
@@ -494,7 +468,7 @@ export default function Navbar({ onSearch }) {
                   <Divider borderColor={colorMode === 'light' ? 'gray.200' : 'gray.600'} />
                   
                   {/* User Profile Section */}
-                  <Box px={1}>
+                  <Box px={1} pt={1}>
                     <Flex align="center" mb={3} px={2} py={1}>
                       <Text fontSize="md" mr={3}>👤</Text>
                       <Text fontSize="sm" fontWeight="medium" color={colorMode === 'dark' ? 'gray.100' : 'gray.700'} isTruncated>

@@ -13,7 +13,6 @@ import {
     Text,
     useColorModeValue,
     Link,
-    Spinner,
     useToast,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
@@ -25,19 +24,20 @@ import { registerUser } from '../redux/users/user_actions';
 export default function Signuppage() {
     const toast = useToast();
     const statusMessages = [
-        { emoji: '👨‍💼', text: 'Creating your secure account...' },
-        { emoji: '🔐', text: 'Encrypting your data...' },
-        { emoji: '🛡️', text: 'Setting up security protocols...' },
-        { emoji: '✅', text: 'Welcome aboard!' }
+        '👋 Creating your secure account...',
+        '🔗 Connecting to the server...',
+        '☕ Waking up the service...',
+        '🛡️ Securing your account...',
+        '✨ Getting everything ready...',
+        '🚀 Almost there...'
     ];
-
     useEffect(() => {
         const original = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = original; };
     }, []);
 
-    const { loading, error } = useSelector((state) => state.userReducer);
+    const { loading } = useSelector((state) => state.userReducer);
     const nav = useNavigate();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -47,23 +47,19 @@ export default function Signuppage() {
     const [statusIndex, setStatusIndex] = useState(0);
 
     useEffect(() => {
-        let interval;
-        if (loading) {
+        if (!loading) {
             setStatusIndex(0);
-            interval = setInterval(() => {
-                setStatusIndex((prev) => (prev + 1) % statusMessages.length);
-            }, 1800);
-        } else if (!loading && !error) {
-            setStatusIndex(-1);
-        } else {
-            setStatusIndex(0);
+            return undefined;
         }
-        return () => clearInterval(interval);
-    }, [loading, error, statusMessages.length]);
 
+        const interval = setInterval(() => {
+            setStatusIndex((currentIndex) => (currentIndex + 1) % statusMessages.length);
+        }, 1800);
+
+        return () => clearInterval(interval);
+    }, [loading, statusMessages.length]);
     // All useColorModeValue hooks must be called at the top level
     const particleBg = useColorModeValue('rgba(79, 140, 255, 0.3)', 'rgba(79, 140, 255, 0.5)');
-    const loadingTextColor = useColorModeValue("green.600", "green.200");
     const backgroundGradientLight = 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #bae6fd 50%, #7dd3fc 75%, #38bdf8 100%)';
     const backgroundGradientDark = 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%)';
     const particleBgImageLight = 'radial-gradient(circle at 20% 80%, rgba(79, 140, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(168, 85, 247, 0.05) 0%, transparent 50%)';
@@ -80,11 +76,13 @@ export default function Signuppage() {
             return;
         }
         try {
-            await dispatch(registerUser({ name, email, password }));
-            if (!loading && !error) {
+            const didRegister = await dispatch(registerUser({ name, email, password }));
+            if (didRegister) {
                 nav('/login');
             }
-        } catch (e) {}
+        } catch (error) {
+            console.error('Signup failed unexpectedly:', error);
+        }
     };
 
     return (
@@ -516,7 +514,7 @@ export default function Signuppage() {
                                     }}
                                     transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                                     isLoading={loading}
-                                    loadingText="Signing up..."
+                                    loadingText={statusMessages[statusIndex]}
                                     disabled={loading}
                                 >
                                     📝 Sign up
@@ -546,75 +544,6 @@ export default function Signuppage() {
                             </Stack>
                         </form>
                         
-                        {loading && (
-                            <Box 
-                                position="absolute" 
-                                top="0" 
-                                left="0" 
-                                right="0" 
-                                bottom="0" 
-                                bg="rgba(255, 255, 255, 0.1)"
-                                backdropFilter="blur(15px)"
-                                WebkitBackdropFilter="blur(15px)"
-                                borderRadius="xl"
-                                display="flex"
-                                flexDirection="column"
-                                alignItems="center"
-                                justifyContent="center"
-                                zIndex="10"
-                            >
-                                <Box
-                                    fontSize="4xl"
-                                    mb={4}
-                                    style={{
-                                        animation: 'bounce 1.5s infinite',
-                                        transformOrigin: 'center bottom',
-                                        filter: 'drop-shadow(0 4px 8px rgba(34, 197, 94, 0.3))'
-                                    }}
-                                    sx={{
-                                        '@keyframes bounce': {
-                                            '0%, 20%, 50%, 80%, 100%': {
-                                                transform: 'translateY(0)'
-                                            },
-                                            '40%': {
-                                                transform: 'translateY(-20px) scale(1.1)'
-                                            },
-                                            '60%': {
-                                                transform: 'translateY(-10px) scale(1.05)'
-                                            }
-                                        }
-                                    }}
-                                >
-                                    {statusIndex === -1 ? '🎉' : statusMessages[statusIndex]?.emoji}
-                                </Box>
-                                <Box
-                                    mb={4}
-                                    p={3}
-                                    borderRadius="full"
-                                    bg="rgba(34, 197, 94, 0.1)"
-                                    border="1px solid rgba(34, 197, 94, 0.2)"
-                                >
-                                    <Spinner size="lg" color="green.400" />
-                                </Box>
-                                <Text 
-                                    color={loadingTextColor} 
-                                    fontWeight="600" 
-                                    textAlign="center"
-                                    fontSize="md"
-                                    px={4}
-                                    lineHeight="1.5"
-                                    bg="rgba(255, 255, 255, 0.1)"
-                                    backdropFilter="blur(10px)"
-                                    borderRadius="lg"
-                                    p={3}
-                                    border="1px solid rgba(34, 197, 94, 0.2)"
-                                >
-                                    {statusIndex === -1
-                                        ? '🎉 Account created successfully!'
-                                        : statusMessages[statusIndex]?.text}
-                                </Text>
-                            </Box>
-                        )}
                     </Box>
                 </Flex>
             </Stack>

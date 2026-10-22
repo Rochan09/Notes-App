@@ -15,29 +15,35 @@ import {
     TagLabel,
     Text,
     Tooltip,
+    VStack,
     useColorModeValue
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import {
     FaBold,
     FaCode,
+    FaHighlighter,
     FaItalic,
     FaLink,
     FaListOl,
     FaListUl,
     FaQuoteLeft,
+    FaRedo,
     FaSave,
     FaStrikethrough,
+    FaTasks,
+    FaUndo,
     FaUnderline
 } from 'react-icons/fa';
 
-function ToolbarButton({ label, icon, className, value }) {
+function ToolbarButton({ label, icon, className, value, onClick }) {
     return (
         <Tooltip label={label} hasArrow placement="top">
             <Button
                 aria-label={label}
                 className={className}
                 value={value}
+                onClick={onClick}
                 variant="ghost"
                 size="sm"
                 minW="32px"
@@ -52,7 +58,21 @@ function ToolbarButton({ label, icon, className, value }) {
     );
 }
 
-function NoteToolbar({ toolbarColor, borderColor }) {
+function NoteToolbar({ toolbarColor, borderColor, onStyleChange, onUndo, onRedo }) {
+    const [isStyleMenuOpen, setIsStyleMenuOpen] = React.useState(false);
+    const [selectedStyle, setSelectedStyle] = React.useState('');
+    const styleOptions = [
+        { value: '', label: 'Normal' },
+        { value: '1', label: 'Heading 1' },
+        { value: '2', label: 'Heading 2' },
+        { value: '3', label: 'Heading 3' }
+    ];
+
+    const applyStyle = (value) => {
+        setSelectedStyle(value);
+        setIsStyleMenuOpen(false);
+    };
+
     return (
         <Flex
             id="note-editor-toolbar"
@@ -65,40 +85,120 @@ function NoteToolbar({ toolbarColor, borderColor }) {
             borderBottom="1px solid"
             borderColor={borderColor}
         >
-            <select className="ql-header" aria-label="Text style" defaultValue="">
-                <option value="">Normal</option>
-                <option value="1">Heading 1</option>
-                <option value="2">Heading 2</option>
-                <option value="3">Heading 3</option>
-            </select>
-            <Box className="toolbar-divider" />
-            <ToolbarButton label="Bold" icon={<FaBold />} className="ql-bold" />
-            <ToolbarButton label="Italic" icon={<FaItalic />} className="ql-italic" />
-            <ToolbarButton label="Underline" icon={<FaUnderline />} className="ql-underline" />
-            <ToolbarButton label="Strikethrough" icon={<FaStrikethrough />} className="ql-strike" />
-            <Box className="toolbar-divider" />
-            <ToolbarButton label="Numbered list" icon={<FaListOl />} className="ql-list" value="ordered" />
-            <ToolbarButton label="Bulleted list" icon={<FaListUl />} className="ql-list" value="bullet" />
-            <Box className="toolbar-divider" />
-            <ToolbarButton label="Block quote" icon={<FaQuoteLeft />} className="ql-blockquote" />
-            <ToolbarButton label="Code block" icon={<FaCode />} className="ql-code-block" />
-            <ToolbarButton label="Add link" icon={<FaLink />} className="ql-link" />
-            <Box className="toolbar-divider" />
-            <Tooltip label="Clear formatting" hasArrow placement="top">
-                <Button
-                    aria-label="Clear formatting"
-                    className="ql-clean"
-                    variant="ghost"
-                    size="sm"
-                    minW="32px"
-                    h="32px"
-                    px={2}
-                    color="inherit"
-                    _hover={{ bg: 'blackAlpha.100', color: '#3182ce' }}
-                >
-                    Tx
-                </Button>
-            </Tooltip>
+            <Box className="toolbar-group toolbar-style">
+                <Box className="toolbar-select-wrap">
+                    <Button
+                        className="ql-header-action"
+                        aria-label="Text style"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsStyleMenuOpen((open) => !open)}
+                        color={toolbarColor}
+                        fontWeight="600"
+                        minW="76px"
+                        justifyContent="flex-start"
+                        _hover={{ bg: 'blackAlpha.100', color: '#3182ce' }}
+                    >
+                        {styleOptions.find((option) => option.value === selectedStyle).label}
+                    </Button>
+                    {isStyleMenuOpen && (
+                        <VStack
+                            className="toolbar-style-menu"
+                            align="stretch"
+                            spacing={1}
+                            position="absolute"
+                            top="calc(100% + 6px)"
+                            left={0}
+                            zIndex={10}
+                            minW="140px"
+                            p={1}
+                            bg="white"
+                            border="1px solid"
+                            borderColor={borderColor}
+                            borderRadius="md"
+                            boxShadow="0 6px 18px rgba(60, 64, 67, 0.2)"
+                        >
+                            {styleOptions.map((option) => (
+                                <Button
+                                    key={option.value || 'normal'}
+                                    variant="ghost"
+                                    size="sm"
+                                    justifyContent="flex-start"
+                                    onClick={() => {
+                                        applyStyle(option.value);
+                                        onStyleChange(option.value);
+                                    }}
+                                >
+                                    {option.label}
+                                </Button>
+                            ))}
+                        </VStack>
+                    )}
+                </Box>
+            </Box>
+            <Box className="toolbar-group">
+                <ToolbarButton label="Undo" icon={<FaUndo />} onClick={onUndo} />
+                <ToolbarButton label="Redo" icon={<FaRedo />} onClick={onRedo} />
+            </Box>
+            <Box className="toolbar-group">
+                <ToolbarButton label="Bold" icon={<FaBold />} className="ql-bold" />
+                <ToolbarButton label="Italic" icon={<FaItalic />} className="ql-italic" />
+                <ToolbarButton label="Underline" icon={<FaUnderline />} className="ql-underline" />
+                <ToolbarButton label="Strikethrough" icon={<FaStrikethrough />} className="ql-strike" />
+            </Box>
+            <Box className="toolbar-group">
+                <ToolbarButton label="Numbered list" icon={<FaListOl />} className="ql-list" value="ordered" />
+                <ToolbarButton label="Bulleted list" icon={<FaListUl />} className="ql-list" value="bullet" />
+                <ToolbarButton label="Checklist" icon={<FaTasks />} className="ql-list" value="unchecked" />
+            </Box>
+            <Box className="toolbar-group">
+                <ToolbarButton label="Block quote" icon={<FaQuoteLeft />} className="ql-blockquote" />
+                <ToolbarButton label="Code block" icon={<FaCode />} className="ql-code-block" />
+                <ToolbarButton label="Add link" icon={<FaLink />} className="ql-link" />
+            </Box>
+            <Box className="toolbar-group toolbar-highlights">
+                <ToolbarButton
+                    label="Yellow highlight"
+                    icon={<FaHighlighter color="#d69e2e" />}
+                    className="ql-background"
+                    value="#fff3a3"
+                />
+                <ToolbarButton
+                    label="Green highlight"
+                    icon={<FaHighlighter color="#38a169" />}
+                    className="ql-background"
+                    value="#c6f6d5"
+                />
+                <ToolbarButton
+                    label="Blue highlight"
+                    icon={<FaHighlighter color="#3182ce" />}
+                    className="ql-background"
+                    value="#bee3f8"
+                />
+                <ToolbarButton
+                    label="Remove highlight"
+                    icon={<FaHighlighter color="#718096" />}
+                    className="ql-background"
+                    value="white"
+                />
+            </Box>
+            <Box className="toolbar-group toolbar-last">
+                <Tooltip label="Clear formatting" hasArrow placement="top">
+                    <Button
+                        aria-label="Clear formatting"
+                        className="ql-clean"
+                        variant="ghost"
+                        size="sm"
+                        minW="32px"
+                        h="32px"
+                        px={2}
+                        color="inherit"
+                        _hover={{ bg: 'blackAlpha.100', color: '#3182ce' }}
+                    >
+                        Tx
+                    </Button>
+                </Tooltip>
+            </Box>
         </Flex>
     );
 }
@@ -121,15 +221,24 @@ export default function NoteEditor({
     const isEdit = mode === 'edit';
     const safeBody = typeof body === 'string' ? body : '';
     const safeTags = Array.isArray(tags) ? tags : [];
-    const pageBackground = useColorModeValue('#f1f3f4', '#202124');
-    const canvasBackground = useColorModeValue('#ffffff', '#292a2d');
+    const pageBackground = useColorModeValue('#f1f3f4', '#0f172a');
+    const canvasBackground = useColorModeValue('#ffffff', '#151e31');
     const titleColor = useColorModeValue('#1f2937', '#f7fafc');
     const mutedColor = useColorModeValue('#718096', '#a0aec0');
-    const editorBackground = useColorModeValue('#ffffff', '#292a2d');
-    const toolbarBackground = useColorModeValue('#f8f9fa', '#303134');
-    const borderColor = useColorModeValue('#e8edf3', '#3d4a5f');
-    const toolbarColor = useColorModeValue('#596579', '#cbd5e0');
+    const editorBackground = useColorModeValue('#ffffff', '#172238');
+    const toolbarBackground = useColorModeValue('#f8f9fa', '#1d2a40');
+    const borderColor = useColorModeValue('#e8edf3', '#344765');
+    const toolbarColor = useColorModeValue('#596579', '#d5def0');
     const [newTag, setNewTag] = React.useState('');
+    const quillRef = React.useRef(null);
+    const historyRef = React.useRef(null);
+    const saveStatusColor = saveStatus === 'saved'
+        ? '#16a34a'
+        : saveStatus === 'saving'
+            ? '#2563eb'
+            : saveStatus === 'error'
+                ? '#dc2626'
+                : mutedColor;
 
     const wordCount = safeBody
         .replace(/<[^>]*>/g, ' ')
@@ -155,7 +264,9 @@ export default function NoteEditor({
                     align="center"
                     justify="space-between"
                     gap={3}
-                    mb={{ base: 2, md: 3 }}
+                    minH={{ base: '44px', md: '48px' }}
+                    mb={{ base: 1, md: 2 }}
+                    px={{ base: 1, md: 2 }}
                 >
                     <HStack spacing={3} minW={0}>
                         <Button
@@ -166,19 +277,22 @@ export default function NoteEditor({
                             color={mutedColor}
                             flexShrink={0}
                         >
-                            <Box display={{ base: 'none', sm: 'block' }}>Back to Notes</Box>
+                            <Box display={{ base: 'none', sm: 'block' }}>Notes</Box>
                             <Box display={{ base: 'block', sm: 'none' }}>Back</Box>
                         </Button>
-                        <Heading size={{ base: 'sm', md: 'md' }} color={titleColor} fontWeight="600" noOfLines={1}>
+                        <Heading size="sm" color={titleColor} fontWeight="600" noOfLines={1}>
                             {isEdit ? 'Edit note' : 'New document'}
                         </Heading>
                     </HStack>
                     <HStack spacing={{ base: 2, md: 3 }} flexShrink={0}>
-                        {isEdit && saveStatus !== 'idle' && (
-                            <Text color={mutedColor} fontSize="sm" display={{ base: 'none', sm: 'block' }}>
-                                {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'}
+                        <HStack spacing={1} color={mutedColor} fontSize="xs" display={{ base: 'none', sm: 'flex' }}>
+                            <Box w="6px" h="6px" borderRadius="full" bg={saveStatusColor} />
+                            <Text>
+                                {isEdit && saveStatus !== 'idle'
+                                    ? saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'
+                                    : 'Ready'}
                             </Text>
-                        )}
+                        </HStack>
                         <Button
                             leftIcon={<FaSave />}
                             colorScheme="blue"
@@ -186,6 +300,8 @@ export default function NoteEditor({
                             isLoading={isLoading}
                             loadingText={isEdit ? 'Saving...' : 'Creating...'}
                             size="sm"
+                            borderRadius="md"
+                            px={{ base: 3, md: 4 }}
                         >
                             {isEdit ? 'Save changes' : 'Save note'}
                         </Button>
@@ -199,8 +315,18 @@ export default function NoteEditor({
                     borderRadius="sm"
                     boxShadow="0 1px 3px rgba(60, 64, 67, 0.25)"
                     overflow="hidden"
+                    position="relative"
                 >
-                    <Box px={{ base: 5, md: 16 }} pt={{ base: 5, md: 8 }}>
+                    <Box
+                        className="document-accent-bar"
+                        position="absolute"
+                        top={0}
+                        left={0}
+                        right={0}
+                        h="2px"
+                        bgGradient="linear(to-r, #4285f4, #7c4dff, #34a853)"
+                    />
+                    <Box px={{ base: 5, md: 16 }} pt={{ base: 4, md: 6 }}>
                         <Input
                             aria-label="Note title"
                             value={title}
@@ -226,21 +352,34 @@ export default function NoteEditor({
                         overflow="hidden"
                         sx={{
                             '#note-editor-toolbar': {
-                                background: toolbarBackground
+                                background: toolbarBackground,
+                                minHeight: '52px',
+                                boxShadow: '0 2px 7px rgba(60, 64, 67, 0.08)'
                             },
-                            '#note-editor-toolbar .ql-header': {
-                                border: 'none',
-                                background: 'transparent',
-                                color: toolbarColor,
-                                fontSize: '0.875rem',
-                                padding: '6px 22px 6px 6px',
-                                cursor: 'pointer'
+                            '#note-editor-toolbar .toolbar-group': {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '2px',
+                                background: useColorModeValue('#ffffff', '#3c4043'),
+                                border: '1px solid',
+                                borderColor,
+                                borderRadius: '10px',
+                                padding: '2px',
+                                boxShadow: '0 1px 2px rgba(60, 64, 67, 0.08)'
                             },
-                            '#note-editor-toolbar .toolbar-divider': {
-                                width: '1px',
-                                height: '22px',
-                                background: borderColor,
-                                mx: { base: '2px', md: '5px' }
+                            '#note-editor-toolbar .toolbar-group.toolbar-style': {
+                                marginRight: { base: '2px', md: '6px' }
+                            },
+                            '#note-editor-toolbar .toolbar-group.toolbar-last': {
+                                marginLeft: 'auto'
+                            },
+                            '#note-editor-toolbar .toolbar-select-wrap': {
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center'
+                            },
+                            '#note-editor-toolbar .toolbar-group button': {
+                                borderRadius: '7px'
                             },
                             '.ql-container': {
                                 border: 'none',
@@ -268,11 +407,32 @@ export default function NoteEditor({
                             }
                         }}
                     >
-                        <NoteToolbar toolbarColor={toolbarColor} borderColor={borderColor} />
+                        <NoteToolbar
+                            toolbarColor={toolbarColor}
+                            borderColor={borderColor}
+                            onStyleChange={(value) => {
+                                const editor = quillRef.current?.getEditor();
+                                if (editor) {
+                                    editor.format('header', value || false);
+                                }
+                            }}
+                            onUndo={() => historyRef.current?.undo()}
+                            onRedo={() => historyRef.current?.redo()}
+                        />
                         <ReactQuill
+                            ref={quillRef}
                             value={safeBody}
                             onChange={onBodyChange}
-                            modules={{ toolbar: '#note-editor-toolbar' }}
+                            modules={{
+                                toolbar: '#note-editor-toolbar',
+                                history: { delay: 1000, maxStack: 100, userOnly: true }
+                            }}
+                            onChangeSelection={() => {
+                                historyRef.current = quillRef.current?.getEditor().history;
+                            }}
+                            onFocus={() => {
+                                historyRef.current = quillRef.current?.getEditor().history;
+                            }}
                             theme="snow"
                             placeholder="Start writing..."
                         />
@@ -332,11 +492,14 @@ export default function NoteEditor({
                         fontSize="sm"
                     >
                         <Text>{safeBody.length} characters · {wordCount} words</Text>
-                        <Text display={{ base: 'none', sm: 'block' }}>
-                            {isEdit && saveStatus !== 'idle'
-                                ? saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'
-                                : 'Ready to write'}
-                        </Text>
+                        <HStack display={{ base: 'none', sm: 'flex' }} spacing={1}>
+                            <Box w="7px" h="7px" borderRadius="full" bg={saveStatusColor} />
+                            <Text>
+                                {isEdit && saveStatus !== 'idle'
+                                    ? saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Save failed'
+                                    : 'Ready to write'}
+                            </Text>
+                        </HStack>
                     </Flex>
                 </Box>
             </Container>

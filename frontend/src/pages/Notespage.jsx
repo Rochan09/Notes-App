@@ -24,7 +24,7 @@ function Notespage({ searchQuery }) {
       !searchQuery ||
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       note.body.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)));
 
   useEffect(() => {
     setLoading(true);
