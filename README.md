@@ -31,6 +31,15 @@ A full-stack Notes application built with the **MERN stack** (MongoDB, Express, 
 - **Frontend**: Deployed on [Vercel](https://vercel.com/)
 - **Backend API**: Deployed on [Render](https://render.com/)
 
+### Vercel frontend settings
+
+The Vercel project for the frontend must use `frontend` as its **Root Directory**.
+Use the Create React App preset with `npm run build` as the build command and
+`build` as the output directory. Add `REACT_APP_API_URL` to the Vercel
+environment variables with the deployed Render API URL. The
+[`frontend/vercel.json`](./frontend/vercel.json) rewrite keeps React Router
+routes working when a page is refreshed directly.
+
 
 
 ---
@@ -64,4 +73,3 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 ## 📬 Contact
 
 For any questions or feedback, feel free to reach out!
-
