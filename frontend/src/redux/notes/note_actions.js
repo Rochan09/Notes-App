@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useSelector } from "react-redux"
 import { store } from "../store"
 import { CREATE_NOTES_ERROR, CREATE_NOTES_LOADING, CREATE_NOTES_SUCCESS, DELETE_NOTES_ERROR, DELETE_NOTES_LOADING, DELETE_NOTES_SUCCESS, GET_NOTES_ERROR, GET_NOTES_LOADING, GET_NOTES_SUCCESS, UPDATE_NOTES_ERROR, UPDATE_NOTES_LOADING, UPDATE_NOTES_SUCCESS } from "./note_types"
 import { API_BASE_URL } from "../../constants/config"
@@ -100,11 +101,11 @@ export const createNotes = (obj)=>async(dispatch)=>{
     }
 }
 
-export const updateNotes = (id, obj)=>async(dispatch)=>{
+export const updateNotes = (id, obj, options = {})=>async(dispatch)=>{
     const {token} = store.getState().userReducer
     if (!token) {
         handleTokenError(dispatch);
-        return;
+        return false;
     }
 
     dispatch({type: UPDATE_NOTES_LOADING})
@@ -119,24 +120,30 @@ export const updateNotes = (id, obj)=>async(dispatch)=>{
         })
         const {status, message} = res.data
         if(status === 1) {
-            toast.success("Note updated successfully", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            if (!options.silent) {
+                toast.success("Note updated successfully", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
             dispatch({type: UPDATE_NOTES_SUCCESS})
             dispatch(getNotes())
+            return true;
         } else if(status === 2) {
             handleTokenError(dispatch);
+            return false;
         } else {
             handleError({response: {data: {message}}}, dispatch, UPDATE_NOTES_ERROR, "Failed to update note");
+            return false;
         }
     } catch (error) {
         handleError(error, dispatch, UPDATE_NOTES_ERROR, "Failed to update note. Please try again.");
+        return false;
     }
 }
 
